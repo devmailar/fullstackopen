@@ -29,42 +29,53 @@ const App = () => {
     person.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const Filter = ({ searchTerm, setSearchTerm }) => (
+    <div>
+      filter shown with{" "}
+      <input
+        value={searchTerm}
+        onChange={(event) => setSearchTerm(event.target.value)}
+      />
+    </div>
+  );
+
+  const PersonForm = ({}) => (
+    <form onSubmit={handleSubmit}>
+      <div>
+        name:{" "}
+        <input
+          value={newName}
+          onChange={(event) => setNewName(event.target.value)}
+        />
+      </div>
+      <div>
+        number:{" "}
+        <input
+          value={newNumber}
+          onChange={(event) => setNewNumber(event.target.value)}
+        />
+      </div>
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </form>
+  );
+
+  const Persons = ({}) =>
+    filterPersons.map((person) => (
+      <div key={person.id}>
+        {person.name} {person.number}
+      </div>
+    ));
+
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with{" "}
-        <input
-          value={searchTerm}
-          onChange={(event) => setSearchTerm(event.target.value)}
-        />
-      </div>
+      <Filter />
       <h2>add a new</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          name:{" "}
-          <input
-            value={newName}
-            onChange={(event) => setNewName(event.target.value)}
-          />
-        </div>
-        <div>
-          number:{" "}
-          <input
-            value={newNumber}
-            onChange={(event) => setNewNumber(event.target.value)}
-          />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm />
       <h2>Numbers</h2>
-      {filterPersons.map((person) => (
-        <div key={person.id}>
-          {person.name} {person.number}
-        </div>
-      ))}
+      <Persons />
     </div>
   );
 };
