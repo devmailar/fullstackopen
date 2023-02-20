@@ -29,6 +29,11 @@ const App = () => {
 
     setNewName('');
     setNewNumber('');
+
+    axios.post('http://localhost:3001/persons', {
+      name: newName,
+      number: newNumber,
+    });
   };
 
   const filterPersons = persons.filter((person) =>
