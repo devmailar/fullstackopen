@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm.js';
 import Persons from './components/Persons.js';
+import personService from './personService.js';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -11,13 +12,16 @@ const App = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(({ data }) => setPersons(data));
+    const fetchData = async () => {
+      const data = await personService.getAll();
+      setPersons(data);
+    };
+    fetchData();
   }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     const isDublicate = persons.find((person) => person.name === newName);
 
     if (isDublicate) {
@@ -26,11 +30,10 @@ const App = () => {
     }
 
     setPersons([...persons, { name: newName, number: newNumber }]);
-
     setNewName('');
     setNewNumber('');
 
-    axios.post('http://localhost:3001/persons', {
+    personService.create({
       name: newName,
       number: newNumber,
     });
