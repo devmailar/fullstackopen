@@ -20,6 +20,15 @@ const create = async (newObject) => {
   }
 };
 
+const remove = async (id) => {
+  try {
+    const response = await axios.delete(`${baseUrl}/${id}`);
+    return response.data;
+  } catch (error) {
+    console.log('Error:', error);
+  }
+};
+
 const update = async (id, newObject) => {
   try {
     const response = await axios.put(`${baseUrl}/${id}`, newObject);
@@ -29,4 +38,4 @@ const update = async (id, newObject) => {
   }
 };
 
-export default { getAll, create, update };
+export default { getAll, create, remove, update };
