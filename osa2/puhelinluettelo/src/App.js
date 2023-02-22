@@ -24,7 +24,13 @@ const App = () => {
     const isDublicate = persons.find((person) => person.name === newName);
 
     if (isDublicate) {
-      alert(`${newName} is already added to phonebook`);
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook, replace the old number with a new one?`
+        )
+      ) {
+        personService.update(2, { name: newName, number: newNumber });
+      }
       return;
     }
 
