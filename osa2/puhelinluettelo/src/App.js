@@ -48,7 +48,7 @@ const App = () => {
   const deletePerson = (event) => {
     event.preventDefault();
     if (window.confirm(`Delete ${persons.name} ?`)) {
-      personService.remove(persons.id);
+      personService.remove();
       fetchData();
     }
   };
