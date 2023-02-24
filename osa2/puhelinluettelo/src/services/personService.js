@@ -20,4 +20,5 @@ const create = (newObject) => request(baseUrl, 'post', newObject);
 const remove = (id) => request(`${baseUrl}/${id}`, 'delete');
 const update = (id, newObject) => request(`${baseUrl}/${id}`, 'put', newObject);
 
+// eslint-disable-next-line
 export default { getAll, create, remove, update };

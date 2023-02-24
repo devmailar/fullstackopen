@@ -1,61 +1,80 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import './App.css';
 import Filter from './components/Filter';
-import PersonForm from './components/PersonForm.js';
-import Persons from './components/Persons.js';
-import personService from './personService.js';
+import PersonForm from './components/PersonForm';
+import Persons from './components/Persons';
+import personService from './services/personService';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [filter, setFilter] = useState('');
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await personService.getAll();
-      setPersons(data);
-    };
-    fetchData();
-  }, []);
+  const fetchData = async () => {
+    const data = await personService.getAll();
+    setPersons(data);
+  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const addPerson = async (event) => {
+    event.preventDefault();
+    const isDuplicate = persons.find((person) => person.name === newName);
 
-    const isDublicate = persons.find((person) => person.name === newName);
-
-    if (isDublicate) {
-      alert(`${newName} is already added to phonebook`);
+    if (isDuplicate) {
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook, replace the old number with a new one?`
+        )
+      ) {
+        personService.update(2, { name: newName, number: newNumber });
+      }
       return;
     }
 
-    setPersons([...persons, { name: newName, number: newNumber }]);
-    setNewName('');
-    setNewNumber('');
+    try {
+      const newPerson = await personService.create({
+        name: newName,
+        number: newNumber,
+      });
 
-    personService.create({
-      name: newName,
-      number: newNumber,
-    });
+      setPersons([...persons, newPerson]);
+      setNewName('');
+      setNewNumber('');
+    } catch (error) {
+      console.error(error);
+    }
   };
 
+  const deletePerson = (event) => {
+    event.preventDefault();
+    if (window.confirm(`Delete ${persons.name} ?`)) {
+      personService.remove(persons.id);
+      fetchData();
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   const filterPersons = persons.filter((person) =>
-    person.name.toLowerCase().includes(searchTerm.toLowerCase())
+    person.name.toLowerCase().includes(filter.toLowerCase())
   );
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <Filter searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      <Filter filter={filter} setFilter={setFilter} />
       <h2>add a new</h2>
       <PersonForm
-        handleSubmit={handleSubmit}
+        addPerson={addPerson}
         newName={newName}
         setNewName={setNewName}
         newNumber={newNumber}
         setNewNumber={setNewNumber}
       />
       <h2>Numbers</h2>
-      <Persons persons={filterPersons} />
+      <Persons deletePerson={deletePerson} persons={filterPersons} />
     </div>
   );
 };

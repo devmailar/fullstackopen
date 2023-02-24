@@ -1,6 +1,16 @@
 .success {
-  background: #d3d3d3;
+  background: #eae1df;
   color: #017b00;
+  font-size: 1.5em;
+  border-style: solid;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.delete {
+  background: #eae1df;
+  color: #9f000f;
   font-size: 1.5em;
   border-style: solid;
   border-radius: 0.5rem;

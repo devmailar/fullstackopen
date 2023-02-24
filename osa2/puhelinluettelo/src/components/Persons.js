@@ -1,16 +1,8 @@
-import personService from '../personService.js';
-
-const Persons = ({ persons }) => {
-  const handleDelete = (person) => {
-    if (window.confirm(`Delete ${person.name} ?`)) {
-      personService.remove(person.id);
-    }
-  };
-
+const Persons = ({ deletePerson, persons }) => {
   return persons.map((person) => (
     <div key={person.id}>
       {person.name} {person.number}
-      <button onClick={() => handleDelete(person)}>delete</button>{' '}
+      <button onClick={deletePerson}>delete</button>
     </div>
   ));
 };
