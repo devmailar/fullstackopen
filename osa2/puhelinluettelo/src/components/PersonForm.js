@@ -1,27 +1,27 @@
 const PersonForm = ({
-  handleSubmit,
+  addPerson,
   newName,
   setNewName,
   newNumber,
   setNewNumber,
 }) => (
-  <form onSubmit={handleSubmit}>
+  <form onSubmit={addPerson}>
     <div>
-      name:{" "}
+      name:{' '}
       <input
         value={newName}
         onChange={(event) => setNewName(event.target.value)}
       />
     </div>
     <div>
-      number:{" "}
+      number:{' '}
       <input
         value={newNumber}
         onChange={(event) => setNewNumber(event.target.value)}
       />
     </div>
     <div>
-      <button type="submit">add</button>
+      <button type='submit'>add</button>
     </div>
   </form>
 );
