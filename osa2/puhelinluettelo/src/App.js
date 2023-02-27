@@ -45,10 +45,9 @@ const App = () => {
     }
   };
 
-  const deletePerson = (event) => {
-    event.preventDefault();
-    if (window.confirm(`Delete ${persons.name} ?`)) {
-      personService.remove();
+  const deletePerson = async (id, name) => {
+    if (window.confirm(`Delete ${name} ?`)) {
+      personService.remove(id);
       fetchData();
     }
   };
