@@ -18,15 +18,32 @@ const App = () => {
 
   const addPerson = async (event) => {
     event.preventDefault();
-    const isDuplicate = persons.find((person) => person.name === newName);
 
-    if (isDuplicate) {
-      if (
-        window.confirm(
-          `${newName} is already added to phonebook, replace the old number with a new one?`
-        )
-      ) {
-        personService.update(2, { name: newName, number: newNumber });
+    const existingPerson = persons.find((person) => person.name === newName);
+
+    if (existingPerson) {
+      const confirmed = window.confirm(
+        `${newName} is already added to phonebook, replace the old number with a new one?`
+      );
+
+      if (confirmed) {
+        try {
+          const updatePerson = await personService.update(existingPerson.id, {
+            ...existingPerson,
+            number: newNumber,
+          });
+
+          setPersons(
+            persons.map((person) =>
+              person.id === updatePerson.id ? updatePerson : person
+            )
+          );
+
+          setNewName('');
+          setNewNumber('');
+        } catch (error) {
+          console.error(error);
+        }
       }
       return;
     }

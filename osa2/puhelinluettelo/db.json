@@ -2,23 +2,13 @@
   "persons": [
     {
       "name": "Arto Hellas",
-      "number": "040-123456",
+      "number": "040-29000",
       "id": 1
     },
     {
-      "name": "Arto Lauri",
-      "number": "234",
+      "name": "Lauri Than",
+      "number": "040-298911",
       "id": 2
-    },
-    {
-      "name": "Arto Lauri",
-      "number": "2345",
-      "id": 3
-    },
-    {
-      "name": "Arto Lauri",
-      "number": "2345",
-      "id": 4
     }
   ]
 }
