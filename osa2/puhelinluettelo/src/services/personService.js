@@ -1,24 +1,22 @@
 import axios from 'axios';
 
-const baseUrl = 'http://localhost:3001/persons';
+const instance = axios.create({
+  baseURL: 'http://localhost:3001/persons',
+});
 
 const request = async (url, method, data) => {
   try {
-    const response = await axios({
-      method,
-      url,
-      data,
-    });
+    const response = await instance({ url, method, data });
     return response.data;
   } catch (error) {
     console.log('Error:', error);
   }
 };
 
-const getAll = () => request(baseUrl, 'get');
-const create = (newObject) => request(baseUrl, 'post', newObject);
-const remove = (id) => request(`${baseUrl}/${id}`, 'delete');
-const update = (id, newObject) => request(`${baseUrl}/${id}`, 'put', newObject);
+const getAll = () => request('', 'get');
+const create = (newObject) => request('', 'post', newObject);
+const remove = (id) => request(`/${id}`, 'delete');
+const update = (id, newObject) => request(`/${id}`, 'put', newObject);
 
 // eslint-disable-next-line
 export default { getAll, create, remove, update };

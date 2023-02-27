@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import './App.css';
+import React, { useEffect, useState, useRef } from 'react';
 import Filter from './components/Filter';
+import Notification from './components/Notification';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
 import personService from './services/personService';
@@ -10,6 +10,8 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filter, setFilter] = useState('');
+  const [message, setMessage] = useState(null);
+  const timerRef = useRef(null);
 
   const fetchData = async () => {
     const data = await personService.getAll();
@@ -39,10 +41,31 @@ const App = () => {
             )
           );
 
+          setMessage({
+            type: 'success',
+            message: `${newName} number updated`,
+          });
+          clearTimeout(timerRef.current);
+
+          timerRef.current = setTimeout(() => {
+            setMessage(null);
+          }, 4000);
+
           setNewName('');
           setNewNumber('');
         } catch (error) {
           console.error(error);
+
+          setMessage({
+            type: 'error',
+            message: error,
+          });
+
+          clearTimeout(timerRef.current);
+
+          timerRef.current = setTimeout(() => {
+            setMessage(null);
+          }, 4000);
         }
       }
       return;
@@ -54,11 +77,32 @@ const App = () => {
         number: newNumber,
       });
 
+      setMessage({
+        type: 'success',
+        message: `Added ${newName}`,
+      });
+      clearTimeout(timerRef.current);
+
+      timerRef.current = setTimeout(() => {
+        setMessage(null);
+      }, 4000);
+
       setPersons([...persons, newPerson]);
       setNewName('');
       setNewNumber('');
     } catch (error) {
       console.error(error);
+
+      setMessage({
+        type: 'error',
+        message: error,
+      });
+
+      clearTimeout(timerRef.current);
+
+      timerRef.current = setTimeout(() => {
+        setMessage(null);
+      }, 4000);
     }
   };
 
@@ -80,6 +124,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter filter={filter} setFilter={setFilter} />
       <h2>add a new</h2>
       <PersonForm
