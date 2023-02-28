@@ -108,7 +108,7 @@ const App = () => {
 
   const deletePerson = async (id, name) => {
     if (window.confirm(`Delete ${name} ?`)) {
-      personService.remove(id);
+      await personService.remove(id);
       fetchData();
     }
   };
