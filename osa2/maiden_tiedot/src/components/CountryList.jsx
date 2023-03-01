@@ -12,7 +12,13 @@ const CountryList = ({ filteredCountries }) => {
             <li key={language}>{language}</li>
           ))}
         </ul>
-        <img src={country.flags.svg} alt={`${country.name.common} flag`} />
+        <img
+          src={country.flags.svg}
+          alt={`${country.name.common} flag`}
+          style={{
+            width: '10rem',
+          }}
+        />
       </div>
     );
   } else if (filteredCountries.length <= 10) {
