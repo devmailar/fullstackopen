@@ -32,6 +32,35 @@ app.get('/api/person/:id', (request, response) => {
   existPerson ? response.json(existPerson) : response.status(404).end();
 });
 
+app.post('/api/persons', (request, response) => {
+  const body = request.body;
+
+  if (
+    !body.name ||
+    !body.number ||
+    body.name.trim().length === 0 ||
+    body.number.trim().length === 0
+  ) {
+    return response
+      .status(400)
+      .json({ error: 'name or number missing or empty field' });
+  }
+
+  const existingPerson = personData.find((person) => person.name === body.name);
+  if (existingPerson) {
+    return response.status(409).json({ error: 'name must be unique' });
+  }
+
+  const newEntry = {
+    id: Math.floor(Math.random() * 1000000),
+    name: body.name,
+    number: body.number,
+  };
+
+  personData = personData.concat(newEntry);
+  response.json(newEntry);
+});
+
 app.delete('/api/person/:id', (request, response) => {
   const entryId = Number(request.params.id);
   const newEntry = personData.filter((person) => person.id !== entryId);
