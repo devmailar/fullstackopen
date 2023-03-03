@@ -1,4 +1,5 @@
 const express = require('express');
+const morgan = require('morgan');
 const app = express();
 
 let personData = [
@@ -9,6 +10,10 @@ let personData = [
 ];
 
 app.use(express.json());
+
+morgan.token("request-data", (request, _response) => JSON.stringify(request.body));
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :request-data '));
 
 app.get('/', (_request, response) => {
   response.send('Hello World');
