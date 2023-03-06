@@ -13,4 +13,7 @@ osa2
   maiden_tiedot
 ```
 
-Hakemistoon kannattaa sijoittaa koko tehtäväsarjan react-projekti lukuunottamatta riippuvuuksia sisältävää hakemistoa <i>node\_modules</i>
+Hakemistoon kannattaa sijoittaa koko tehtäväsarjan react-projekti lukuunottamatta riippuvuuksia sisältävää hakemistoa <i>node_modules</i>
+
+Linkki verkkosovellukseen:
+https://puhelinluettelo-back-xsas.onrender.com/

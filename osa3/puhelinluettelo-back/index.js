@@ -1,6 +1,8 @@
 const express = require("express");
 const morgan = require("morgan");
+
 const app = express();
+const PORT = process.env.PORT || 3001;
 
 let personData = [
   { id: 1, name: "Arto Hellas", number: "040-123456" },
@@ -79,7 +81,6 @@ app.delete("/api/person/:id", (request, response) => {
   response.json(newEntry);
 });
 
-const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
