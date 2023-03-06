@@ -1,15 +1,15 @@
-import React, { useEffect, useState, useRef } from 'react';
-import Filter from './components/Filter';
-import Notification from './components/Notification';
-import PersonForm from './components/PersonForm';
-import Persons from './components/Persons';
-import personService from './services/personService';
+import React, { useEffect, useRef, useState } from "react";
+import Filter from "./components/Filter";
+import Notification from "./components/Notification";
+import PersonForm from "./components/PersonForm";
+import Persons from "./components/Persons";
+import personService from "./services/personService";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
-  const [newName, setNewName] = useState('');
-  const [newNumber, setNewNumber] = useState('');
-  const [filter, setFilter] = useState('');
+  const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
+  const [filter, setFilter] = useState("");
   const [message, setMessage] = useState(null);
   const timerRef = useRef(null);
 
@@ -42,22 +42,23 @@ const App = () => {
           );
 
           setMessage({
-            type: 'success',
+            type: "success",
             message: `${newName} number updated`,
           });
+
           clearTimeout(timerRef.current);
 
           timerRef.current = setTimeout(() => {
             setMessage(null);
           }, 4000);
 
-          setNewName('');
-          setNewNumber('');
+          setNewName("");
+          setNewNumber("");
         } catch (error) {
           console.error(error);
 
           setMessage({
-            type: 'error',
+            type: "error",
             message: error,
           });
 
@@ -69,47 +70,47 @@ const App = () => {
         }
       }
       return;
-    }
+    } else {
+      try {
+        const newPerson = await personService.create({
+          name: newName,
+          number: newNumber,
+        });
 
-    try {
-      const newPerson = await personService.create({
-        name: newName,
-        number: newNumber,
-      });
+        setMessage({
+          type: "success",
+          message: `Added ${newName}`,
+        });
+        clearTimeout(timerRef.current);
 
-      setMessage({
-        type: 'success',
-        message: `Added ${newName}`,
-      });
-      clearTimeout(timerRef.current);
+        timerRef.current = setTimeout(() => {
+          setMessage(null);
+        }, 4000);
 
-      timerRef.current = setTimeout(() => {
-        setMessage(null);
-      }, 4000);
+        setPersons([...persons, newPerson]);
+        setNewName("");
+        setNewNumber("");
+      } catch (error) {
+        console.error(error);
 
-      setPersons([...persons, newPerson]);
-      setNewName('');
-      setNewNumber('');
-    } catch (error) {
-      console.error(error);
+        setMessage({
+          type: "error",
+          message: error,
+        });
 
-      setMessage({
-        type: 'error',
-        message: error,
-      });
+        clearTimeout(timerRef.current);
 
-      clearTimeout(timerRef.current);
-
-      timerRef.current = setTimeout(() => {
-        setMessage(null);
-      }, 4000);
+        timerRef.current = setTimeout(() => {
+          setMessage(null);
+        }, 4000);
+      }
     }
   };
 
   const deletePerson = async (id, name) => {
     if (window.confirm(`Delete ${name} ?`)) {
       await personService.remove(id);
-      fetchData();
+      setPersons(persons.filter((person) => person.id !== id));
     }
   };
 
