@@ -32,10 +32,9 @@ app.get("/api/persons", (_request, response) => {
 });
 
 app.get("/info", (_request, response) => {
-  const entries = personData.length;
-  const time = new Date();
-
-  response.send(`Phonebook has info for ${entries} people <br> ${time}`);
+  response.send(
+    `Phonebook has info for ${personData.length} people <br> ${new Date()}`
+  );
 });
 
 app.get("/api/person/:id", (request, response) => {

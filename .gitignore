@@ -12,7 +12,6 @@
 
 # production
 .idea
-osa3/notebackend
 /build
 
 # misc
