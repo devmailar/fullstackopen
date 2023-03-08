@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "http://puhelinluettelo-back-xsas.onrender.com/api/persons",
+  baseURL: "/api/persons",
 });
 
 const request = async (url, method, data) => {

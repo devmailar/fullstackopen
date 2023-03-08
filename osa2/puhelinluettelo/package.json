@@ -12,9 +12,6 @@
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.0"
   },
-  "devDependencies": {
-    "json-server": "^0.17.2"
-  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -22,7 +19,6 @@
     "eject": "react-scripts eject",
     "server": "json-server -p3001 --watch db.json"
   },
-  "proxy": "http://puhelinluettelo-back-xsas.onrender.com",
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -40,5 +36,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "devDependencies": {
+    "json-server": "^0.17.2"
+  },
+  "proxy": "http://localhost:3001"
 }
