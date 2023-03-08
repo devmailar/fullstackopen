@@ -1,8 +1,9 @@
 const express = require("express");
 const morgan = require("morgan");
-
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+app.use(express.json());
 
 let personData = [
   { id: 1, name: "Arto Hellas", number: "040-123456" },
@@ -10,8 +11,6 @@ let personData = [
   { id: 3, name: "Dan Abramov", number: "12-43-234345" },
   { id: 4, name: "Mary Poppendick", number: "39-23-6423122" },
 ];
-
-app.use(express.json());
 
 morgan.token("request-data", (request, _response) =>
   JSON.stringify(request.body)
