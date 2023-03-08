@@ -22,6 +22,7 @@
     "eject": "react-scripts eject",
     "server": "json-server -p3001 --watch db.json"
   },
+  "proxy": "https://puhelinluettelo-back-xsas.onrender.com",
   "eslintConfig": {
     "extends": [
       "react-app",
