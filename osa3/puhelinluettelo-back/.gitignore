@@ -10,7 +10,6 @@
 
 # production
 /build
-pass.txt
 
 # misc
 .DS_Store
