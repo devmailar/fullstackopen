@@ -37,5 +37,3 @@ Note.find({}).then((result) => {
   });
   mongoose.connection.close();
 });
-
-//Z9MGUH9wenp9gTC
