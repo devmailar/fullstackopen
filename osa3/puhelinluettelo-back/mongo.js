@@ -6,36 +6,36 @@ if (process.argv.length < 3) {
 }
 
 const password = process.argv[2];
+const database = "phonebook";
 
-const url = `mongodb+srv://fullstack:${password}@cluster0.djt3mta.mongodb.net/noteApp?retryWrites=true&w=majority`;
+const url = `mongodb+srv://fullstack:${password}@cluster0.djt3mta.mongodb.net/${database}?retryWrites=true&w=majority`;
 
 mongoose.set("strictQuery", false);
 mongoose.connect(url);
 
-const noteSchema = new mongoose.Schema({
-  content: String,
-  date: Date,
-  important: Boolean,
+const personSchema = new mongoose.Schema({
+  name: String,
+  number: String,
 });
 
-const Note = mongoose.model("Note", noteSchema);
+const Person = mongoose.model("Person", personSchema);
 
-const note = new Note({
-  content: "CSS is hard",
-  date: new Date(),
-  important: true,
-});
-
-note.save().then((result) => {
-  console.log("note saved!");
-  mongoose.connection.close();
-});
-
-Note.find({}).then((result) => {
-  result.forEach((note) => {
-    console.log(note);
+if (process.argv.length === 5) {
+  const person = new Person({
+    name: process.argv[3],
+    number: process.argv[4],
   });
-  mongoose.connection.close();
-});
 
-//Z9MGUH9wenp9gTC
+  person.save().then((result) => {
+    console.log(`Added ${person.name} ${person.number} to phonebook`);
+    mongoose.connection.close();
+  });
+} else {
+  Person.find({}).then((persons) => {
+    console.log("Phonebook:");
+    persons.forEach((person) => {
+      console.log(`${person.name} ${person.number}`);
+    });
+    mongoose.connection.close();
+  });
+}
