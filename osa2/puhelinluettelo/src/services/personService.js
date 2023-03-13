@@ -14,11 +14,8 @@ const request = async (url, method, data) => {
 };
 
 const getAll = () => request("", "get");
-
 const create = (newObject) => request("", "post", newObject);
-
 const remove = (id) => request(`/${id}`, "delete");
-
 const update = (id, newObject) => request(`/${id}`, "put", newObject);
 
 // eslint-disable-next-line

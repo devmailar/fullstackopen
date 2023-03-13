@@ -13,9 +13,28 @@ const App = () => {
   const [message, setMessage] = useState(null);
   const timerRef = useRef(null);
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   const fetchData = async () => {
-    const data = await personService.getAll();
-    setPersons(data);
+    try {
+      const data = await personService.getAll();
+      setPersons(data);
+    } catch (error) {
+      console.error(error);
+
+      setMessage({
+        type: "error",
+        message: error.message,
+      });
+
+      clearTimeout(timerRef.current);
+
+      timerRef.current = setTimeout(() => {
+        setMessage(null);
+      }, 10000);
+    }
   };
 
   const addPerson = async (event) => {
@@ -59,7 +78,7 @@ const App = () => {
 
           setMessage({
             type: "error",
-            message: error,
+            message: error.message,
           });
 
           clearTimeout(timerRef.current);
@@ -70,32 +89,67 @@ const App = () => {
         }
       }
       return;
-    } else {
+    }
+
+    try {
+      const newPerson = await personService.create({
+        name: newName,
+        number: newNumber,
+      });
+
+      setPersons([...persons, newPerson]);
+
+      setMessage({
+        type: "success",
+        message: `Added ${newName}`,
+      });
+
+      clearTimeout(timerRef.current);
+
+      timerRef.current = setTimeout(() => {
+        setMessage(null);
+      }, 4000);
+
+      setNewName("");
+      setNewNumber("");
+    } catch (error) {
+      console.error(error);
+
+      setMessage({
+        type: "error",
+        message: error.message,
+      });
+
+      clearTimeout(timerRef.current);
+
+      timerRef.current = setTimeout(() => {
+        setMessage(null);
+      }, 4000);
+    }
+  };
+
+  const deletePerson = async (id, name) => {
+    if (window.confirm(`Delete ${name} ?`)) {
       try {
-        const newPerson = await personService.create({
-          name: newName,
-          number: newNumber,
-        });
+        await personService.remove(id);
+        setPersons(persons.filter((person) => person.id !== id));
 
         setMessage({
-          type: "success",
-          message: `Added ${newName}`,
+          type: "error",
+          message: `Deleted ${name}`,
         });
+
         clearTimeout(timerRef.current);
 
         timerRef.current = setTimeout(() => {
           setMessage(null);
         }, 4000);
-
-        setPersons([...persons, newPerson]);
-        setNewName("");
-        setNewNumber("");
       } catch (error) {
         console.error(error);
 
         setMessage({
           type: "error",
-          message: error,
+          message: error.message,
         });
 
         clearTimeout(timerRef.current);
@@ -106,17 +160,6 @@ const App = () => {
       }
     }
   };
-
-  const deletePerson = async (id, name) => {
-    if (window.confirm(`Delete ${name} ?`)) {
-      await personService.remove(id);
-      setPersons(persons.filter((person) => person.id !== id));
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   const filterPersons = persons.filter((person) =>
     person.name.toLowerCase().includes(filter.toLowerCase())
