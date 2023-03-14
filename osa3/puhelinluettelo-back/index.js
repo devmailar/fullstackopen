@@ -51,11 +51,15 @@ app.get("/api/persons/:id", (req, res, next) => {
 });
 
 app.delete("/api/persons/:id", (req, res, next) => {
-  console.log("IO: " + req.params.id);
-
   Person.findByIdAndRemove(req.params.id)
-    .then(() => {
-      res.status(204).end();
+    .then((result) => {
+      if (result) {
+        return res.status(204).end();
+      } else {
+        return res.status(404).json({
+          error: "entry not found",
+        });
+      }
     })
     .catch((error) => next(error));
 });
