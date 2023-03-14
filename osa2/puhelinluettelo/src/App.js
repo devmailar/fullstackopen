@@ -113,11 +113,9 @@ const App = () => {
       setNewName("");
       setNewNumber("");
     } catch (error) {
-      console.error(error);
-
       setMessage({
         type: "error",
-        message: error.message,
+        message: error.response.data.error,
       });
 
       clearTimeout(timerRef.current);
