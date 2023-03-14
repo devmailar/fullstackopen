@@ -36,9 +36,9 @@ app.use(
   )
 );
 
-app.get("/", (_req, res) => {
-  res.send("Hello World");
-});
+// app.get("/", (_req, res) => {
+//   res.send("Hello World");
+// });
 
 app.get("/info", (_req, res) => {
   Person.find({}).then((result) => {
