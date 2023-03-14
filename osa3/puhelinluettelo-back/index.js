@@ -77,13 +77,16 @@ app.delete("/api/persons/:id", (req, res, next) => {
 app.put("/api/persons/:id", (req, res, next) => {
   const { name, number } = req.body;
 
-  person
-    .findByIdAndUpdate(req.params.id, {
+  Person.findByIdAndUpdate(
+    req.params.id,
+    {
       name,
       number,
-    })
-    .then((result) => {
-      res.json(result);
+    },
+    { new: true }
+  )
+    .then((updatedPerson) => {
+      res.json(updatedPerson);
     })
     .catch((error) => next(error));
 });
