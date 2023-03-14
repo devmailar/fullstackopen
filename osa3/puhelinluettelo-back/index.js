@@ -48,16 +48,17 @@ app.get("/api/persons", (_req, res) => {
   });
 });
 
-app.get("/api/persons/:id", (req, res, next) => {
-  Person.findById(req.params.id)
-    .then((person) => {
-      if (person) {
-        res.json(person);
-      } else {
-        res.status(404).end();
-      }
-    })
-    .catch((error) => next(error));
+app.get("/api/persons/:id", async (req, res, next) => {
+  try {
+    const person = await Person.findById(req.params.id);
+    if (person) {
+      res.json(person);
+    } else {
+      res.status(404).end();
+    }
+  } catch (error) {
+    next(error);
+  }
 });
 
 app.delete("/api/persons/:id", (req, res, next) => {
