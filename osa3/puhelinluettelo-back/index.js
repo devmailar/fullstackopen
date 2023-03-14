@@ -24,6 +24,10 @@ const errorHandler = (error, _req, res, next) => {
   next(error);
 };
 
+const unknownEndpoint = (_req, res) => {
+  res.status(404).send({ error: "unknown endpoint" });
+};
+
 morgan.token("request-data", (req, _res) => JSON.stringify(req.body));
 
 app.use(
@@ -110,6 +114,7 @@ app.post("/api/persons", (req, res, next) => {
     .catch((error) => next(error));
 });
 
+app.use(unknownEndpoint);
 app.use(errorHandler);
 
 app.listen(PORT, () => {
