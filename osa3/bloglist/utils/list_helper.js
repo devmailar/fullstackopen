@@ -6,6 +6,14 @@ const totalLikes = (listWithOneBlog) => {
   return listWithOneBlog.reduce((total, blog) => total + blog.likes, 0);
 };
 
+const mostLikes = (blogs) => {
+  const mostLikes = blogs.reduce((prev, current) => {
+    return prev.likes > current.likes ? prev : current;
+  });
+
+  return mostLikes.author + ' ' + mostLikes.likes;
+};
+
 const favoriteBlog = (blogs) => {
   if (!blogs.length) {
     return null;
@@ -30,4 +38,5 @@ module.exports = {
   totalLikes,
   favoriteBlog,
   mostBlogs,
+  mostLikes,
 };
