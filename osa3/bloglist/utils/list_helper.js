@@ -17,8 +17,17 @@ const favoriteBlog = (blogs) => {
   return blogs.reduce(reducer);
 };
 
+const mostBlogs = (blogs) => {
+  const topBlogger = blogs.reduce((prev, current) => {
+    return prev.blogs > current.blogs ? prev : current;
+  });
+
+  return topBlogger.author;
+};
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
+  mostBlogs,
 };
