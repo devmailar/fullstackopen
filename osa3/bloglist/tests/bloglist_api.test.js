@@ -43,7 +43,29 @@ describe('bloglist', () => {
     });
   });
 
-  // Write a test that verifies that the unique identifier property of the blog posts is named id, by default the database names the property _id. Verifying the existence of a property is easily done with Jest's toBeDefined matcher.
+  test('creates a new blog post', async () => {
+    const newBlog = {
+      title: 'New blog',
+      author: 'Jack Ryan',
+      url: 'https://example.com/blogs/newBlog',
+      likes: 5100,
+    };
+
+    await api.post('/api/blogs').send(newBlog).expect(201);
+
+    const response = await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+    expect(response.body).toHaveLength(helper.initialBlogs.length + 1);
+
+    const titles = response.body.map((data) => data.title);
+    const authors = response.body.map((data) => data.author);
+
+    expect(titles).toContain('New blog');
+    expect(authors).toContain('Jack Ryan');
+  });
 });
 
 afterAll(async () => {
