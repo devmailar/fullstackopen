@@ -68,7 +68,7 @@ test('a specific note can be viewed', async () => {
   const resultNote = await api
     .get(`/api/notes/${noteToView.id}`)
     .expect(200)
-    .expect('Contet-Type', /application\/json/);
+    .expect('Content-Type', /application\/json/);
 
   expect(resultNote.body).toEqual(noteToView);
 });
