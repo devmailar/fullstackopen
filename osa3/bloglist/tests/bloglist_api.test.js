@@ -48,7 +48,7 @@ describe('bloglist', () => {
       title: 'New blog',
       author: 'Jack Ryan',
       url: 'https://example.com/blogs/newBlog',
-      likes: 5100,
+      likes: 612,
     };
 
     await api.post('/api/blogs').send(newBlog).expect(201);
@@ -60,11 +60,11 @@ describe('bloglist', () => {
 
     expect(response.body).toHaveLength(helper.initialBlogs.length + 1);
 
-    const titles = response.body.map((data) => data.title);
-    const authors = response.body.map((data) => data.author);
+    const title = response.body.map((data) => data.title);
+    const author = response.body.map((data) => data.author);
 
-    expect(titles).toContain('New blog');
-    expect(authors).toContain('Jack Ryan');
+    expect(title).toContain('New blog');
+    expect(author).toContain('Jack Ryan');
   });
 });
 
