@@ -1,6 +1,6 @@
 const listHelper = require('../utils/list_helper');
 
-describe('favoriteBlog', () => {
+describe('favorite blog', () => {
   const blogs = [
     {
       title: 'Canonical string reduction',
@@ -19,7 +19,7 @@ describe('favoriteBlog', () => {
     },
   ];
 
-  test('returns the blog with most likes of blogs', () => {
+  test('returns blog with most likes', () => {
     expect(listHelper.favoriteBlog(blogs)).toEqual(blogs[2]);
   });
 });

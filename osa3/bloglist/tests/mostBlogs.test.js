@@ -1,6 +1,6 @@
 const listHelper = require('../utils/list_helper');
 
-describe('topBlogger', () => {
+describe('top blogger', () => {
   const blogs = [
     {
       author: 'John Doe',
