@@ -79,6 +79,44 @@ describe('bloglist', () => {
     const titles = blogsAtEnd.map((b) => b.title);
     expect(titles).not.toContain(blogToDelete.title);
   });
+
+  test('updates a blog post', async () => {
+    const initialBlogs = await helper.blogsInDb();
+    const blogToUpdate = initialBlogs[0];
+
+    const updatedBlog = {
+      title: 'Updated blog',
+      author: 'Michael Maik',
+      url: 'https://example.com/blogs/updatedBlog',
+      likes: 100,
+    };
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(updatedBlog)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+    const response = await api.get('/api/blogs');
+
+    expect(response.body).toHaveLength(initialBlogs.length);
+    expect(response.body.map((blog) => blog.title)).toContain(
+      updatedBlog.title
+    );
+    expect(response.body.map((blog) => blog.author)).toContain(
+      updatedBlog.author
+    );
+
+    const blogsAfterUpdate = await helper.blogsInDb();
+    const updatedBlogAfter = blogsAfterUpdate.find(
+      (blog) => blog.id === blogToUpdate.id
+    );
+
+    expect(updatedBlogAfter.title).toBe(updatedBlog.title);
+    expect(updatedBlogAfter.author).toBe(updatedBlog.author);
+    expect(updatedBlogAfter.url).toBe(updatedBlog.url);
+    expect(updatedBlogAfter.likes).toBe(updatedBlog.likes);
+  });
 });
 
 afterAll(async () => {
