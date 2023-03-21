@@ -1,4 +1,4 @@
 # Full Stack Open
 
-Phonebooth application:<br>
+Phonebook application:<br>
 https://puhelinluettelo-back-xsas.onrender.com/
