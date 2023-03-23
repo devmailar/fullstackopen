@@ -37,7 +37,7 @@ describe('bloglist', () => {
   test('unique identifier property is named id', async () => {
     const response = await api.get('/api/blogs');
     const body = response.body;
-    body.forEach((blog) => {
+    body.forEach(blog => {
       expect(blog.id).toBeDefined();
       expect(blog._id).toBeUndefined();
     });
@@ -60,8 +60,8 @@ describe('bloglist', () => {
 
     expect(response.body).toHaveLength(helper.initialBlogs.length + 1);
 
-    const title = response.body.map((data) => data.title);
-    const author = response.body.map((data) => data.author);
+    const title = response.body.map(data => data.title);
+    const author = response.body.map(data => data.author);
 
     expect(title).toContain('New blog');
     expect(author).toContain('Jack Ryan');
@@ -76,7 +76,7 @@ describe('bloglist', () => {
     const blogsAtEnd = await helper.blogsInDb();
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1);
 
-    const titles = blogsAtEnd.map((b) => b.title);
+    const titles = blogsAtEnd.map(b => b.title);
     expect(titles).not.toContain(blogToDelete.title);
   });
 
@@ -100,17 +100,11 @@ describe('bloglist', () => {
     const response = await api.get('/api/blogs');
 
     expect(response.body).toHaveLength(initialBlogs.length);
-    expect(response.body.map((blog) => blog.title)).toContain(
-      updatedBlog.title
-    );
-    expect(response.body.map((blog) => blog.author)).toContain(
-      updatedBlog.author
-    );
+    expect(response.body.map(blog => blog.title)).toContain(updatedBlog.title);
+    expect(response.body.map(blog => blog.author)).toContain(updatedBlog.author);
 
     const blogsAfterUpdate = await helper.blogsInDb();
-    const updatedBlogAfter = blogsAfterUpdate.find(
-      (blog) => blog.id === blogToUpdate.id
-    );
+    const updatedBlogAfter = blogsAfterUpdate.find(blog => blog.id === blogToUpdate.id);
 
     expect(updatedBlogAfter.title).toBe(updatedBlog.title);
     expect(updatedBlogAfter.author).toBe(updatedBlog.author);
