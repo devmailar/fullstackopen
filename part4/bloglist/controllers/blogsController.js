@@ -1,6 +1,15 @@
 const blogsRouter = require('express').Router();
+const jwt = require('jsonwebtoken');
 const Blog = require('../models/blogModel');
 const User = require('../models/userModel');
+
+const getTokenFrom = request => {
+  const authorization = request.get('authorization');
+  if (authorization && authorization.startsWith('Bearer ')) {
+    return authorization.replace('Bearer ', '');
+  }
+  return null;
+};
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 });
@@ -10,26 +19,37 @@ blogsRouter.get('/', async (request, response) => {
 
 blogsRouter.post('/', async (request, response) => {
   const { title, author, url, likes } = request.body;
-  const users = await User.find({});
+  const token = getTokenFrom(request);
 
-  if (!users.length) {
-    return response.status(400).json({ error: 'no users found' });
+  try {
+    const decodedToken = jwt.verify(token, process.env.SECRET);
+
+    if (!token || !decodedToken.id) {
+      return response.status(401).json({ error: 'missing or invalid token' });
+    }
+
+    const user = await User.findById(decodedToken.id);
+    const blog = new Blog({
+      title,
+      author,
+      url,
+      likes,
+      user: user._id,
+    });
+
+    const savedBlog = await blog.save();
+
+    user.blogs = user.blogs.concat(savedBlog._id);
+    await user.save();
+
+    response.status(201).json(savedBlog);
+  } catch (exception) {
+    if (exception.name === 'JsonWebTokenError') {
+      return response.status(401).json({ error: 'invalid token' });
+    } else {
+      response.status(500).json({ error: 'couldnt save blog' });
+    }
   }
-
-  const user = users[0];
-  const blog = new Blog({
-    title,
-    author,
-    url,
-    likes,
-    user: user._id,
-  });
-
-  const savedBlog = await blog.save();
-  user.blogs = user.blogs ? user.blogs.concat(savedBlog._id) : [savedBlog._id];
-  await user.save();
-
-  response.status(201).json(savedBlog);
 });
 
 blogsRouter.put('/:id', async (request, response) => {
