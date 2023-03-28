@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
+import './App.css';
 import Blog from './components/Blog';
+import ErrorNotification from './components/ErrorNotification';
+import SuccessNotification from './components/SuccessNotification';
 import blogService from './services/blogs';
 import loginService from './services/login';
 
@@ -8,6 +11,8 @@ const App = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
   const [blogTitle, setBlogTitle] = useState('');
   const [blogAuthor, setBlogAuthor] = useState('');
   const [blogUrl, setBlogUrl] = useState('');
@@ -32,13 +37,17 @@ const App = () => {
         username,
         password,
       });
+
       setUser(user);
       setUsername('');
       setPassword('');
       window.localStorage.setItem('loggedBlogsappUser', JSON.stringify(user));
       blogService.setToken(user.token);
     } catch (exception) {
-      console.error(exception);
+      setErrorMessage(`wrong username or password`);
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
     }
   };
 
@@ -58,6 +67,10 @@ const App = () => {
       setBlogAuthor('');
       setBlogUrl('');
       setBlogs([...blogs, { title: blogTitle, author: blogAuthor, url: blogUrl }]);
+      setSuccessMessage(`a new blog ${blogTitle} by ${blogAuthor}`);
+      setTimeout(() => {
+        setSuccessMessage(null);
+      }, 5000);
     } catch (exception) {
       console.error(exception);
     }
@@ -66,6 +79,7 @@ const App = () => {
   const LoginForm = () => (
     <form onSubmit={handleLogin}>
       <h2>log in to application</h2>
+      <ErrorNotification message={errorMessage} />
       <div>
         username
         <input type="text" value={username} name="Username" onChange={({ target }) => setUsername(target.value)} />
@@ -104,6 +118,9 @@ const App = () => {
   return (
     <>
       <h2>blogs</h2>
+      <SuccessNotification message={successMessage} />
+      <ErrorNotification message={errorMessage} />
+
       <p>
         {user.name} logged in{' '}
         <button
