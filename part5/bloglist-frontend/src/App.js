@@ -3,6 +3,7 @@ import './App.css';
 import Blog from './components/Blog';
 import ErrorNotification from './components/ErrorNotification';
 import SuccessNotification from './components/SuccessNotification';
+import Togglable from './components/Togglable';
 import blogService from './services/blogs';
 import loginService from './services/login';
 
@@ -132,7 +133,7 @@ const App = () => {
           logout
         </button>
       </p>
-      {BlogForm()}
+      <Togglable buttonLabel="new note">{BlogForm()}</Togglable>
       {blogs.map(blog => (
         <Blog key={blog.id} blog={blog} />
       ))}
