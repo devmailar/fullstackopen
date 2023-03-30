@@ -112,6 +112,16 @@ const App = () => {
 
   const sortBlogsByLikes = [...blogs].sort((blogA, blogB) => blogB.likes - blogA.likes);
 
+  const deleteBlog = async ({ id, title, author }) => {
+    if (window.confirm(`Remove blog ${title} by ${author}`)) {
+      try {
+        await blogService.remove(id);
+      } catch (exception) {
+        console.error(exception);
+      }
+    }
+  };
+
   return (
     <>
       <h2>blogs</h2>
@@ -135,7 +145,7 @@ const App = () => {
       </Togglable>
 
       {sortBlogsByLikes.map(blog => (
-        <Blog key={blog.id} blog={blog} likePost={() => likeBlog(blog)} />
+        <Blog key={blog.id} blog={blog} likeBlog={() => likeBlog(blog)} deleteBlog={() => deleteBlog(blog)} />
       ))}
     </>
   );
