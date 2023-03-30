@@ -74,14 +74,14 @@ const App = () => {
     const { title, author, url } = blog;
 
     try {
-      await blogService.create({
+      const createdBlog = await blogService.create({
         title,
         author,
         url,
         likes: 0,
       });
 
-      setBlogs([...blogs, { ...newBlog, title, author, url, likes: 0 }]);
+      setBlogs([...blogs, createdBlog]);
       setSuccessMessage(`a new blog ${title} by ${author}`);
       setTimeout(() => {
         setSuccessMessage(null);
@@ -97,12 +97,14 @@ const App = () => {
 
   const likeBlog = async ({ id, title, author, url, likes }) => {
     try {
-      await blogService.update(id, {
+      const updatedBlog = await blogService.update(id, {
         title,
         author,
         url,
         likes: likes + 1,
       });
+
+      setBlogs(blogs.map(blog => (blog.id === updatedBlog.id ? updatedBlog : blog)));
     } catch (exception) {
       console.error(exception);
     }
