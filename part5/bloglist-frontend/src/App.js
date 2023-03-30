@@ -81,7 +81,7 @@ const App = () => {
         likes: 0,
       });
 
-      setBlogs([...blogs, { title: title, author: author, url: url }]);
+      setBlogs([...blogs, { ...newBlog, title, author, url, likes: 0 }]);
       setSuccessMessage(`a new blog ${title} by ${author}`);
       setTimeout(() => {
         setSuccessMessage(null);
@@ -92,6 +92,19 @@ const App = () => {
       setTimeout(() => {
         setErrorMessage(null);
       }, 5000);
+    }
+  };
+
+  const likeBlog = async ({ id, title, author, url, likes }) => {
+    try {
+      await blogService.update(id, {
+        title,
+        author,
+        url,
+        likes: likes + 1,
+      });
+    } catch (exception) {
+      console.error(exception);
     }
   };
 
@@ -118,7 +131,7 @@ const App = () => {
       </Togglable>
 
       {blogs.map(blog => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} likePost={() => likeBlog(blog)} />
       ))}
     </>
   );
