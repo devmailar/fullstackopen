@@ -116,6 +116,7 @@ const App = () => {
     if (window.confirm(`Remove blog ${title} by ${author}`)) {
       try {
         await blogService.remove(id);
+        setBlogs(blogs.filter(blog => blog.id !== id));
       } catch (exception) {
         console.error(exception);
       }
