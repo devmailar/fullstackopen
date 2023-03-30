@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Blog = ({ blog, likeBlog, deleteBlog }) => {
+const Blog = ({ blog, likeBlog, deleteBlog, currentUser }) => {
   const [view, setView] = useState(false);
 
   const blogStyle = {
@@ -9,6 +9,10 @@ const Blog = ({ blog, likeBlog, deleteBlog }) => {
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5,
+  };
+
+  const userOwnsBlog = () => {
+    return true;
   };
 
   return (
@@ -22,9 +26,11 @@ const Blog = ({ blog, likeBlog, deleteBlog }) => {
             likes {blog.likes} <button onClick={likeBlog}>like</button>
           </div>
           <div>{blog.author}</div>
-          <div>
-            <button onClick={deleteBlog}>remove</button>
-          </div>
+          {userOwnsBlog() && (
+            <div>
+              <button onClick={deleteBlog}>remove</button>
+            </div>
+          )}
         </>
       )}
     </div>

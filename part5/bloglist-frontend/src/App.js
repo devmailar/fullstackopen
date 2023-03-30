@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import Blog from './components/Blog';
 import BlogForm from './components/BlogForm';
-import ErrorNotification from './components/ErrorNotification';
-import SuccessNotification from './components/SuccessNotification';
+import Notification from './components/Notification';
 import Togglable from './components/Togglable';
 import blogService from './services/blogs';
 import loginService from './services/login';
@@ -13,8 +12,7 @@ const App = () => {
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(null);
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
     blogService.getAll().then(blogs => setBlogs(blogs));
@@ -43,9 +41,9 @@ const App = () => {
       window.localStorage.setItem('loggedBlogsappUser', JSON.stringify(user));
       blogService.setToken(user.token);
     } catch (exception) {
-      setErrorMessage(`wrong username or password`);
+      setMessage(`wrong username or password`);
       setTimeout(() => {
-        setErrorMessage(null);
+        setMessage(null);
       }, 5000);
     }
   };
@@ -53,7 +51,7 @@ const App = () => {
   const LoginForm = () => (
     <form onSubmit={handleLogin}>
       <h2>log in to application</h2>
-      <ErrorNotification message={errorMessage} />
+      <Notification message={message} />
       <div>
         username
         <input type="text" value={username} name="Username" onChange={({ target }) => setUsername(target.value)} />
@@ -82,15 +80,21 @@ const App = () => {
       });
 
       setBlogs([...blogs, createdBlog]);
-      setSuccessMessage(`a new blog ${title} by ${author}`);
+      setMessage({
+        message: `a new blog ${title} by ${author}`,
+        type: 'success',
+      });
       setTimeout(() => {
-        setSuccessMessage(null);
+        setMessage(null);
       }, 5000);
     } catch (exception) {
       console.error(exception);
-      setErrorMessage(`failed to create new blog with title ${title}`);
+      setMessage({
+        message: `failed to create new blog with title ${title}`,
+        type: 'error',
+      });
       setTimeout(() => {
-        setErrorMessage(null);
+        setMessage(null);
       }, 5000);
     }
   };
@@ -117,8 +121,22 @@ const App = () => {
       try {
         await blogService.remove(id);
         setBlogs(blogs.filter(blog => blog.id !== id));
+        setMessage({
+          message: 'blog removed',
+          type: 'success',
+        });
+        setTimeout(() => {
+          setMessage(null);
+        }, 5000);
       } catch (exception) {
         console.error(exception);
+        setMessage({
+          message: 'failed to remove blog',
+          type: 'error',
+        });
+        setTimeout(() => {
+          setMessage(null);
+        }, 5000);
       }
     }
   };
@@ -126,11 +144,10 @@ const App = () => {
   return (
     <>
       <h2>blogs</h2>
-      <SuccessNotification message={successMessage} />
-      <ErrorNotification message={errorMessage} />
+      <Notification message={message?.message} type={message?.type} />
 
       <p>
-        {user.name} logged in{' '}
+        {user.name} logged in
         <button
           onClick={() => {
             window.localStorage.removeItem('loggedBlogsappUser');
