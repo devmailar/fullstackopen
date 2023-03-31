@@ -163,7 +163,13 @@ const App = () => {
       </Togglable>
 
       {sortBlogsByLikes.map(blog => (
-        <Blog key={blog.id} blog={blog} likeBlog={() => likeBlog(blog)} deleteBlog={() => deleteBlog(blog)} />
+        <Blog
+          key={blog.id}
+          blog={blog}
+          likeBlog={() => likeBlog(blog)}
+          deleteBlog={() => deleteBlog(blog)}
+          currentUser={user}
+        />
       ))}
     </>
   );

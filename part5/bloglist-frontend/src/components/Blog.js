@@ -11,8 +11,8 @@ const Blog = ({ blog, likeBlog, deleteBlog, currentUser }) => {
     marginBottom: 5,
   };
 
-  const userOwnsBlog = () => {
-    return true;
+  const userAddedBlog = () => {
+    return currentUser && currentUser.id === blog.user.id;
   };
 
   return (
@@ -26,7 +26,7 @@ const Blog = ({ blog, likeBlog, deleteBlog, currentUser }) => {
             likes {blog.likes} <button onClick={likeBlog}>like</button>
           </div>
           <div>{blog.author}</div>
-          {userOwnsBlog() && (
+          {userAddedBlog() && (
             <div>
               <button onClick={deleteBlog}>remove</button>
             </div>
