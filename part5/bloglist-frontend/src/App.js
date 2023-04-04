@@ -7,6 +7,7 @@ import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
+/*eslint linebreak-style: ["error", "windows"]*/
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
@@ -41,7 +42,7 @@ const App = () => {
       window.localStorage.setItem('loggedBlogsappUser', JSON.stringify(user))
       blogService.setToken(user.token)
     } catch (exception) {
-      setMessage(`wrong username or password`)
+      setMessage('Wrong username or password')
       setTimeout(() => {
         setMessage(null)
       }, 5000)
