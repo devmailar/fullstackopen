@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 
 const Blog = ({ blog, likeBlog, deleteBlog, currentUser }) => {
-  const [view, setView] = useState(false);
+  const [view, setView] = useState(false)
 
   const blogStyle = {
     paddingTop: 10,
@@ -9,11 +9,11 @@ const Blog = ({ blog, likeBlog, deleteBlog, currentUser }) => {
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5,
-  };
+  }
 
   const userAddedBlog = () => {
-    return currentUser && currentUser.id === blog.user.id;
-  };
+    return currentUser && currentUser.id === blog.user.id
+  }
 
   return (
     <div style={blogStyle}>
@@ -34,7 +34,7 @@ const Blog = ({ blog, likeBlog, deleteBlog, currentUser }) => {
         </>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Blog;
+export default Blog
