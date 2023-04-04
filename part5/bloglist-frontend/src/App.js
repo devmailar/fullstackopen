@@ -7,7 +7,6 @@ import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
-/*eslint linebreak-style: ["error", "windows"]*/
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
