@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 
 const Blog = ({ blog, likeBlog, deleteBlog, currentUser }) => {
   const [view, setView] = useState(false)
-
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -17,12 +16,17 @@ const Blog = ({ blog, likeBlog, deleteBlog, currentUser }) => {
 
   return (
     <div style={blogStyle}>
-      {blog.title}
+      <div data-testid="title" className="blog-title">
+        {blog.title}
+      </div>
+      <div data-testid="author" className="blog-author">
+        by {blog.author}
+      </div>
       <button onClick={() => setView(!view)}>{view ? 'hide' : 'view'}</button>
       {view && (
         <>
-          <div>{blog.url}</div>
-          <div>
+          <div data-testid="url">{blog.url}</div>
+          <div data-testid="likes">
             likes {blog.likes} <button onClick={likeBlog}>like</button>
           </div>
           <div>{blog.author}</div>

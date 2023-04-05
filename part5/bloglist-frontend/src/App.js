@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 import { useEffect, useState } from 'react'
 import './App.css'
 import Blog from './components/Blog'
