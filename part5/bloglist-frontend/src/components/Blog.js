@@ -11,7 +11,7 @@ const Blog = ({ blog, likeBlog, deleteBlog, currentUser }) => {
   }
 
   const userAddedBlog = () => {
-    return currentUser && currentUser.id === blog.user.id
+    return currentUser && blog.user && currentUser.id === blog.user.id
   }
 
   return (
