@@ -32,4 +32,25 @@ describe('Blog app', () => {
       cy.contains('Wrong username or password')
     })
   })
+
+  describe('When logged in', () => {
+    beforeEach(() => {
+      cy.contains('login').click()
+      cy.get('input[name="Username"]').type('testuser')
+      cy.get('input[name="Password"]').type('password')
+      cy.get('button[type="submit"]').click()
+      cy.contains('Test User logged in')
+    })
+
+    it('A blog can be created', () => {
+      cy.contains('create new blog').click()
+      cy.get('input[name="title"]').type('This is test blog')
+      cy.get('input[name="author"]').type('This is test blog author')
+      cy.get('input[name="url"]').type('http://example.com')
+      cy.get('button[type="submit"]').click()
+      cy.contains('This is test blog')
+      cy.contains('This is test blog author')
+      cy.contains('http://example.com')
+    })
+  })
 })
