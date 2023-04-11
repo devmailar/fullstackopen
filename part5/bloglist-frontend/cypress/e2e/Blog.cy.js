@@ -1,4 +1,5 @@
 /* eslint-disable linebreak-style */
+/* eslint-disable no-undef */
 describe('Blog app', () => {
   beforeEach(() => {
     cy.request('POST', 'http://localhost:3003/api/testing/reset')
@@ -46,11 +47,26 @@ describe('Blog app', () => {
       cy.contains('create new blog').click()
       cy.get('input[name="title"]').type('This is test blog')
       cy.get('input[name="author"]').type('This is test blog author')
-      cy.get('input[name="url"]').type('http://example.com')
+      cy.get('input[name="url"]').type('https://example.com/')
       cy.get('button[type="submit"]').click()
       cy.contains('This is test blog')
       cy.contains('This is test blog author')
-      cy.contains('http://example.com')
+    })
+
+    it('A blog can be created and liked', () => {
+      cy.contains('create new blog').click()
+      cy.get('input[name="title"]').type('This is test blog')
+      cy.get('input[name="author"]').type('This is test blog author')
+      cy.get('input[name="url"]').type('https://example.com/')
+      cy.get('button[type="submit"]').click()
+      cy.contains('This is test blog')
+      cy.contains('This is test blog author')
+      cy.get('div.container').within(() => {
+        cy.contains('button', 'view').click()
+        cy.contains('button', 'like').click()
+      })
+      cy.contains('likes 1')
+      cy.contains('https://example.com/')
     })
   })
 })

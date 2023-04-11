@@ -15,7 +15,7 @@ const Blog = ({ blog, likeBlog, deleteBlog, currentUser }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div className="container" style={blogStyle}>
       <div data-testid="title" className="blog-title">
         {blog.title}
       </div>
