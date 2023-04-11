@@ -1,4 +1,4 @@
-const Blog = require('../models/blog');
+const Blog = require('../models/blogModel');
 
 const initialBlogs = [
   {
@@ -34,7 +34,7 @@ const nonExistingId = async () => {
 
 const blogsInDb = async () => {
   const blogs = await Blog.find({});
-  return blogs.map((b) => b.toJSON());
+  return blogs.map(b => b.toJSON());
 };
 
 module.exports = {
