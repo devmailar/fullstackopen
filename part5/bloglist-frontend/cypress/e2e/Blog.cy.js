@@ -1,14 +1,24 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable no-undef */
 describe('Blog app', () => {
-  beforeEach(() => {
+  function resetDatabase() {
     cy.request('POST', 'http://localhost:3003/api/testing/reset')
-    cy.visit('http://localhost:3000')
-    cy.request('POST', 'http://localhost:3003/api/users', {
-      username: 'testuser',
-      name: 'Test User',
+  }
+
+  function createUser() {
+    const user = {
+      username: 'mike',
+      name: 'Mike',
       password: 'password',
-    })
+    }
+
+    cy.request('POST', `${Cypress.env('BACKEND')}/users/`, user)
+  }
+
+  beforeEach(() => {
+    resetDatabase()
+    createUser()
+    cy.visit('')
   })
 
   it('Login form is shown', () => {
@@ -19,17 +29,21 @@ describe('Blog app', () => {
   describe('Login', () => {
     it('succeeds with correct credentials', () => {
       cy.contains('login').click()
-      cy.get('input[name="Username"]').type('testuser')
+
+      cy.get('input[name="Username"]').type('mike')
       cy.get('input[name="Password"]').type('password')
       cy.get('button[type="submit"]').click()
-      cy.contains('Test User logged in')
+
+      cy.contains('Mike logged in')
     })
 
     it('fails with wrong credentials', () => {
       cy.contains('login').click()
-      cy.get('input[name="Username"]').type('testuser')
-      cy.get('input[name="Password"]').type('wrongpassword')
+
+      cy.get('input[name="Username"]').type('mike')
+      cy.get('input[name="Password"]').type('random')
       cy.get('button[type="submit"]').click()
+
       cy.contains('Wrong username or password')
     })
   })
@@ -37,10 +51,10 @@ describe('Blog app', () => {
   describe('When logged in', () => {
     beforeEach(() => {
       cy.contains('login').click()
-      cy.get('input[name="Username"]').type('testuser')
+      cy.get('input[name="Username"]').type('mike')
       cy.get('input[name="Password"]').type('password')
       cy.get('button[type="submit"]').click()
-      cy.contains('Test User logged in')
+      cy.contains('Mike logged in')
     })
 
     it('A blog can be created', () => {
