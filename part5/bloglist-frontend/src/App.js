@@ -3,30 +3,46 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
-import Notification from './components/Notification'
+import Notification from './components/Notify'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState(null)
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogsappUser')
+
+    //NOTE If the user JSON is found
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+
+      //NOTE Set token
+      blogService.setToken(user.token)
+
+      //NOTE Set state
+      setUser(user)
+    }
   }, [])
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogsappUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
+    /* NOTE
+      This is better since now we check if the  user is
+      logged in then we only fetch the blogs from api
+      It's bad practice to fetch a lot of blogs from api when user
+      is not even logged in and can cause performance issues
+    */
+    if (user) {
+      blogService.getAll().then((blogs) => {
+        setBlogs(blogs)
+      })
     }
-  }, [])
+  }, [user])
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -39,7 +55,9 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+
       window.localStorage.setItem('loggedBlogsappUser', JSON.stringify(user))
+
       blogService.setToken(user.token)
     } catch (exception) {
       setMessage('Wrong username or password')
@@ -158,7 +176,7 @@ const App = () => {
 
   return (
     <>
-      <h2>blogs</h2>
+      <h2>Blogs</h2>
       <Notification message={message?.message} type={message?.type} />
 
       <p>
@@ -181,9 +199,9 @@ const App = () => {
         <Blog
           key={blog.id}
           blog={blog}
+          currentUser={user}
           likeBlog={() => likeBlog(blog)}
           deleteBlog={() => deleteBlog(blog)}
-          currentUser={user}
         />
       ))}
     </>

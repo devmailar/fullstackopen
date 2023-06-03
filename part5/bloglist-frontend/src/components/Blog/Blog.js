@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
 
-const Blog = ({ blog, likeBlog, deleteBlog, currentUser }) => {
+const Blog = ({ blog, currentUser, likeBlog, deleteBlog }) => {
   const [view, setView] = useState(false)
+
+  const currentUserId = currentUser.id
+
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -11,7 +14,7 @@ const Blog = ({ blog, likeBlog, deleteBlog, currentUser }) => {
   }
 
   const userAddedBlog = () => {
-    return currentUser && blog.user && currentUser.id === blog.user.id
+    return currentUser.id === blog.user.id
   }
 
   return (
