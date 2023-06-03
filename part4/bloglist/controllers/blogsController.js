@@ -20,6 +20,12 @@ blogsRouter.post('/', async (request, response) => {
       return response.status(401).json({ error: 'missing or invalid token' });
     }
 
+    if (!title || !author || !url) {
+      return response
+        .status(401)
+        .json({ error: 'missing title or author or url' });
+    }
+
     const user = await User.findById(decodedToken.id);
     const blog = new Blog({
       title,
