@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const Blog = ({ blog, currentUser, likeBlog, deleteBlog }) => {
   const [view, setView] = useState(false)
+  const [showRemoveButton, setShowRemoveButton] = useState(false)
+
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -11,8 +13,12 @@ const Blog = ({ blog, currentUser, likeBlog, deleteBlog }) => {
   }
 
   const userAddedBlog = () => {
-    return currentUser.id === blog.user.id
+    return currentUser && currentUser.id === blog.user.id
   }
+
+  useEffect(() => {
+    setShowRemoveButton(userAddedBlog())
+  }, [currentUser])
 
   return (
     <div className="container" style={blogStyle}>
@@ -30,7 +36,7 @@ const Blog = ({ blog, currentUser, likeBlog, deleteBlog }) => {
             likes {blog.likes} <button onClick={likeBlog}>like</button>
           </div>
           <div>{blog.author}</div>
-          {userAddedBlog() && (
+          {showRemoveButton && (
             <div>
               <button onClick={deleteBlog}>remove</button>
             </div>
