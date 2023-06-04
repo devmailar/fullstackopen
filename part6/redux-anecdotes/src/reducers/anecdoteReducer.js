@@ -7,7 +7,9 @@ const anecdotesAtStart = [
   'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
 ];
 
-const getId = () => (100000 * Math.random()).toFixed(0);
+const getId = () => {
+  return (100000 * Math.random()).toFixed(0);
+};
 
 const asObject = (anecdote) => {
   return {
@@ -20,30 +22,39 @@ const asObject = (anecdote) => {
 const initialState = anecdotesAtStart.map(asObject);
 
 const reducer = (state = initialState, action) => {
-  console.log('state now: ', state);
-  console.log('action', action);
-
   switch (action.type) {
     case 'VOTE':
-      return state.map((anecdote) => {
-        if (anecdote.id === action.id) {
-          return { ...anecdote, votes: anecdote.votes + 1 };
-        } else {
-          return anecdote;
-        }
+      const votedAnecdote = state.find((anecdote) => {
+        return anecdote.id === action.id;
       });
+
+      const updatedAnecdote = {
+        ...votedAnecdote,
+        votes: votedAnecdote.votes + 1,
+      };
+
+      const updatedState = state
+        .filter((anecdote) => {
+          return anecdote.id !== action.id;
+        })
+        .concat(updatedAnecdote);
+      return sortAnecdotes(updatedState);
     case 'ADD':
       const newAnecdote = {
         content: action.content,
         id: getId(),
         votes: 0,
       };
-      return [...state, newAnecdote];
+      return sortAnecdotes([...state, newAnecdote]);
     default:
       return state;
   }
+};
 
-  return state;
+const sortAnecdotes = (anecdotes) => {
+  return anecdotes.sort((a, b) => {
+    return b.votes - a.votes;
+  });
 };
 
 export default reducer;
