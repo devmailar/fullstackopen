@@ -19,23 +19,15 @@ const asObject = (anecdote) => {
   };
 };
 
+const sortAnecdotes = (anecdotes) => {
+  return anecdotes.sort((a, b) => {
+    return b.votes - a.votes;
+  });
+};
+
 const initialState = anecdotesAtStart.map(asObject);
 
-export const voteAnecdote = (id) => {
-  return {
-    type: 'VOTE',
-    id,
-  };
-};
-
-export const addAnecdote = (content) => {
-  return {
-    type: 'ADD',
-    content,
-  };
-};
-
-const reducer = (state = initialState, action) => {
+export const anecdoteReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'VOTE':
       const votedAnecdote = state.find((anecdote) => {
@@ -47,28 +39,25 @@ const reducer = (state = initialState, action) => {
         votes: votedAnecdote.votes + 1,
       };
 
-      const updatedState = state
-        .filter((anecdote) => {
-          return anecdote.id !== action.id;
+      return sortAnecdotes(
+        state.map((anecdote) => {
+          if (anecdote.id !== action.id) {
+            return anecdote;
+          } else {
+            return updatedAnecdote;
+          }
         })
-        .concat(updatedAnecdote);
-      return sortAnecdotes(updatedState);
+      );
+
     case 'ADD':
       const newAnecdote = {
         content: action.content,
         id: getId(),
         votes: 0,
       };
+
       return sortAnecdotes([...state, newAnecdote]);
     default:
       return state;
   }
 };
-
-const sortAnecdotes = (anecdotes) => {
-  return anecdotes.sort((a, b) => {
-    return b.votes - a.votes;
-  });
-};
-
-export default reducer;
