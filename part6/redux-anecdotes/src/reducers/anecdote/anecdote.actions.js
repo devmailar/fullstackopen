@@ -1,13 +1,4 @@
-export const voteAnecdote = (id) => {
-  return {
-    type: 'VOTE',
-    id,
-  };
-};
+import { createAction } from '@reduxjs/toolkit';
 
-export const addAnecdote = (content) => {
-  return {
-    type: 'ADD',
-    content,
-  };
-};
+export const voteAnecdote = createAction('anecdote/voteAnecdote');
+export const addAnecdote = createAction('anecdote/addAnecdote');
