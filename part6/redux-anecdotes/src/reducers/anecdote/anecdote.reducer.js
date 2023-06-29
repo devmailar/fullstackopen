@@ -24,6 +24,7 @@ const anecdoteSlice = createSlice({
         id: getId(),
         votes: 0,
       };
+
       state.push(newAnecdote);
     },
     setAnecdotes(state, action) {
