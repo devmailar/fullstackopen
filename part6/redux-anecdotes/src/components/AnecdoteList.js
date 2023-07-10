@@ -17,7 +17,10 @@ const AnecdoteList = () => {
   });
 
   const filteredAnecdotes = anecdotes.filter((anecdote) => {
-    return anecdote.content.toLowerCase().includes(filter.toLowerCase());
+    if (typeof anecdote.content === 'string') {
+      return anecdote.content.toLowerCase().includes(filter.toLowerCase());
+    }
+    return false;
   });
 
   const vote = (id) => {
