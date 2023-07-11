@@ -1,32 +1,19 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { voteAnecdote } from '../reducers/anecdote/anecdote.actions';
 import {
-  setNotification,
   removeNotification,
+  setNotification,
 } from '../reducers/notification/notification.actions';
+import anecdoteService from '../services/anecdotes';
 
 const AnecdoteList = () => {
   const dispatch = useDispatch();
 
-  const anecdotes = useSelector((state) => {
-    return state.anecdote;
-  });
+  const anecdotes = useSelector((state) => state.anecdote);
+  const filter = useSelector((state) => state.filter);
 
-  const filter = useSelector((state) => {
-    return state.filter;
-  });
-
-  const filteredAnecdotes = anecdotes.filter((anecdote) => {
-    if (typeof anecdote.content === 'string') {
-      return anecdote.content.toLowerCase().includes(filter.toLowerCase());
-    }
-    return false;
-  });
-
-  const vote = (id) => {
-    const votedAnecdote = anecdotes.find((anecdote) => {
-      return anecdote.id === id;
-    });
+  const vote = async (id) => {
+    const votedAnecdote = await anecdoteService.addVote(id);
 
     dispatch(voteAnecdote(id));
     dispatch(setNotification(`you voted '${votedAnecdote.content}'`));
@@ -35,6 +22,13 @@ const AnecdoteList = () => {
       dispatch(removeNotification());
     }, 5000);
   };
+
+  const filteredAnecdotes = anecdotes.filter((anecdote) => {
+    if (typeof anecdote.content === 'string') {
+      return anecdote.content.toLowerCase().includes(filter.toLowerCase());
+    }
+    return false;
+  });
 
   return (
     <div>

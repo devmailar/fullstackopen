@@ -4,21 +4,18 @@ import AnecdoteForm from './components/AnecdoteForm.js';
 import AnecdoteList from './components/AnecdoteList';
 import Filter from './components/Filter.js';
 import Notification from './components/Notification.js';
-import {
-  initializeAnecdotes,
-  createAnecdote,
-} from './reducers/anecdote/anecdote.actions';
+import { initializeAnecdotes } from './reducers/anecdote/anecdote.actions';
 
 const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    /**
+     * Each time the dispatch function is called, the useEffect will run again
+     * to render the anecdotes from the server
+     */
     dispatch(initializeAnecdotes());
   }, [dispatch]);
-
-  const addNewAnecdote = (content) => {
-    dispatch(createAnecdote(content));
-  };
 
   return (
     <div>
@@ -26,7 +23,7 @@ const App = () => {
       <Notification />
       <Filter />
       <AnecdoteList />
-      <AnecdoteForm addNewAnecdote={addNewAnecdote} />
+      <AnecdoteForm />
     </div>
   );
 };
