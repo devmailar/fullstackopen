@@ -3,7 +3,7 @@ import AnecdoteForm from './components/AnecdoteForm';
 import Notification from './components/Notification';
 
 const App = () => {
-  const { data, status, error } = useQuery('anecdotes', async () => {
+  const { data, status } = useQuery('anecdotes', async () => {
     try {
       const res = await fetch('http://localhost:3001/anecdotes');
       if (!res.ok) {
