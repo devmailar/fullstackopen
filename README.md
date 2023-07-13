@@ -1,6 +1,7 @@
 # Full Stack Open
 
 ### Deployed
+https://puhelinluettelo-qdri.onrender.com/
 https://puhelinluettelo-back-xsas.onrender.com/
 
 ### Progress
