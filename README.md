@@ -1,8 +1,8 @@
 # Full Stack Open
 
 ### Deployed
-https://puhelinluettelo-qdri.onrender.com/
-https://puhelinluettelo-back-xsas.onrender.com/
+* https://puhelinluettelo-qdri.onrender.com/
+* https://puhelinluettelo-back-xsas.onrender.com/
 
 ### Progress
 - [x] Part 0 Fundamentals of Web apps
