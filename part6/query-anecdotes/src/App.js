@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import AnecdoteForm from './components/AnecdoteForm';
 import Notification from './components/Notification';
 
@@ -17,6 +17,24 @@ const App = () => {
     }
   });
 
+  const updateAnecdote = async (anecdote) => {
+    const res = await fetch(`http://localhost:3001/anecdotes/${anecdote.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(anecdote),
+    });
+    return await res.json();
+  };
+
+  const { mutate } = useMutation(updateAnecdote);
+
+  const handleVote = (anecdote) => {
+    const updatedAnecdote = { ...anecdote, votes: anecdote.votes + 1 };
+    mutate(updatedAnecdote);
+  };
+
   switch (status) {
     case 'loading':
       return <div>Anecdotes are loading...</div>;
@@ -28,11 +46,8 @@ const App = () => {
       break;
   }
 
-  const handleVote = (anecdote) => {
-    console.log('vote');
-  };
-
   const anecdotes = data || [];
+
   return (
     <div>
       <h3>Anecdote app</h3>
