@@ -1,19 +1,20 @@
+import { useContext } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import AnecdoteForm from './components/AnecdoteForm';
 import Notification from './components/Notification';
+import { NotificationContext } from './components/NotificationContext';
 
 const App = () => {
+  const { showNotification, hideNotification } = useContext(NotificationContext);
+
   const { data, status } = useQuery('anecdotes', async () => {
     try {
       const res = await fetch('http://localhost:3001/anecdotes');
-      if (!res.ok) {
-        throw new Error();
-      }
+      if (!res.ok) throw new Error();
+
       return await res.json();
     } catch (error) {
-      throw new Error(
-        'Anecdote service not available due to problems in server'
-      );
+      throw new Error('Anecdote service not available due to problems in server');
     }
   });
 
@@ -28,7 +29,14 @@ const App = () => {
     return await res.json();
   };
 
-  const { mutate } = useMutation(updateAnecdote);
+  const { mutate } = useMutation(updateAnecdote, {
+    onSuccess: ({ content }) => {
+      showNotification(`anecdote '${content}' voted`);
+      setTimeout(() => {
+        hideNotification();
+      }, 5000);
+    },
+  });
 
   const handleVote = (anecdote) => {
     const updatedAnecdote = { ...anecdote, votes: anecdote.votes + 1 };
@@ -39,9 +47,7 @@ const App = () => {
     case 'loading':
       return <div>Anecdotes are loading...</div>;
     case 'error':
-      return (
-        <div>Anecdote service not available due to problems in server</div>
-      );
+      return <div>Anecdote service not available due to problems in server</div>;
     default:
       break;
   }

@@ -1,6 +1,10 @@
+import { useContext } from 'react';
 import { useMutation } from 'react-query';
+import { NotificationContext } from './NotificationContext';
 
 const AnecdoteForm = () => {
+  const { showNotification, hideNotification } = useContext(NotificationContext);
+
   const createAnecdote = async (content) => {
     const res = await fetch('http://localhost:3001/anecdotes', {
       method: 'POST',
@@ -12,7 +16,14 @@ const AnecdoteForm = () => {
     return await res.json();
   };
 
-  const { mutate } = useMutation(createAnecdote);
+  const { mutate } = useMutation(createAnecdote, {
+    onSuccess: ({ content }) => {
+      showNotification(`anecdote '${content}' created`);
+      setTimeout(() => {
+        hideNotification();
+      }, 5000);
+    },
+  });
 
   const onCreate = (event) => {
     event.preventDefault();
