@@ -10,11 +10,9 @@ const App = () => {
   const { data, status } = useQuery('anecdotes', async () => {
     try {
       const res = await fetch('http://localhost:3001/anecdotes');
-      if (!res.ok) throw new Error();
-
       return await res.json();
     } catch (error) {
-      throw new Error('Anecdote service not available due to problems in server');
+      throw new Error('An error occurred while fetching anecdotes');
     }
   });
 
@@ -39,8 +37,12 @@ const App = () => {
   });
 
   const handleVote = (anecdote) => {
-    const updatedAnecdote = { ...anecdote, votes: anecdote.votes + 1 };
-    mutate(updatedAnecdote);
+    const vote = {
+      ...anecdote,
+      votes: anecdote.votes + 1,
+    };
+
+    mutate(vote);
   };
 
   switch (status) {

@@ -13,6 +13,7 @@ const AnecdoteForm = () => {
       },
       body: JSON.stringify({ content, votes: 0 }),
     });
+
     return await res.json();
   };
 
@@ -23,15 +24,28 @@ const AnecdoteForm = () => {
         hideNotification();
       }, 5000);
     },
+    onError: (error) => {
+      showNotification(`'${error}' anecdote creation failed`);
+      setTimeout(() => {
+        hideNotification();
+      }, 5000);
+    },
   });
 
-  const onCreate = (event) => {
+  const onCreate = async (event) => {
     event.preventDefault();
     let content = event.target.anecdote.value;
-    if (content.length >= 5) {
-      mutate(content);
-      content = '';
+
+    if (content.length < 5) {
+      showNotification(`'${content}' is too short for an anecdote, must be atleast length of 5 characters or more`);
+      setTimeout(() => {
+        hideNotification();
+      }, 5000);
+      return;
     }
+
+    mutate(content);
+    content = '';
   };
 
   return (
