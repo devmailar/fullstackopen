@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
 
 const Menu = () => {
   const padding = {
@@ -34,7 +35,11 @@ const AnecdoteList = ({ anecdotes }) => (
     <h2>Anecdotes</h2>
     <ul>
       {anecdotes.map((anecdote) => {
-        return <li key={anecdote.id}>{anecdote.content}</li>;
+        return (
+          <li key={anecdote.id}>
+            <Link to={`anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
+          </li>
+        );
       })}
     </ul>
   </div>
@@ -134,25 +139,48 @@ const App = () => {
     },
   ]);
 
-  const [notification, setNotification] = useState('');
+  // const [notification, setNotification] = useState('');
 
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000);
     setAnecdotes(anecdotes.concat(anecdote));
   };
 
-  const anecdoteById = (id) => anecdotes.find((a) => a.id === id);
+  // const anecdoteById = (id) => {
+  //   return anecdotes.find((a) => a.id === id);
+  // };
 
-  const vote = (id) => {
-    const anecdote = anecdoteById(id);
+  const Anecdote = ({ anecdotes }) => {
+    const id = useParams().id;
+    const anecdote = anecdotes.find((n) => {
+      return n.id === Number(id);
+    });
 
-    const voted = {
-      ...anecdote,
-      votes: anecdote.votes + 1,
-    };
-
-    setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)));
+    return (
+      <article>
+        <h2>{anecdote.content}</h2>
+        <div>has {anecdote.votes} votes</div>
+        <div>
+          for more info see <a href={anecdote.info}>{anecdote.info}</a>
+        </div>
+      </article>
+    );
   };
+
+  // const vote = (id) => {
+  //   const anecdote = anecdoteById(id);
+
+  //   const voted = {
+  //     ...anecdote,
+  //     votes: anecdote.votes + 1,
+  //   };
+
+  //   setAnecdotes(
+  //     anecdotes.map((a) => {
+  //       return a.id === id ? voted : a;
+  //     })
+  //   );
+  // };
 
   return (
     <Router>
@@ -171,6 +199,10 @@ const App = () => {
           </Route>
           <Route path="/about">
             <About />
+          </Route>
+          {/* Add the new route for showing a single anecdote */}
+          <Route path="/anecdotes/:id">
+            <Anecdote anecdotes={anecdotes} />
           </Route>
         </Switch>
         <Footer />
