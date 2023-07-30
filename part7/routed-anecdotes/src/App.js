@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
-import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
+import { Link, Route, BrowserRouter as Router, Routes, useNavigate, useParams } from 'react-router-dom';
 
 const Menu = () => {
   const padding = {
@@ -73,6 +72,8 @@ const Footer = () => (
 );
 
 const CreateNew = (props) => {
+  const navigate = useNavigate();
+
   const [content, setContent] = useState('');
   const [author, setAuthor] = useState('');
   const [info, setInfo] = useState('');
@@ -85,6 +86,13 @@ const CreateNew = (props) => {
       info,
       votes: 0,
     });
+
+    props.setNotification(`a new anecdote ${content} created!`);
+    setTimeout(() => {
+      props.setNotification('');
+    }, 5000);
+
+    navigate('/');
   };
 
   return (
@@ -139,7 +147,7 @@ const App = () => {
     },
   ]);
 
-  // const [notification, setNotification] = useState('');
+  const [notification, setNotification] = useState('');
 
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000);
@@ -187,24 +195,31 @@ const App = () => {
       <div>
         <h1>Software anecdotes</h1>
         <Menu />
-        <Switch>
+        {notification !== '' && <dialog open>{notification}</dialog>}
+
+        <Routes>
           <Route
-            exact
             path="/"
-          >
-            <AnecdoteList anecdotes={anecdotes} />
-          </Route>
-          <Route path="/create">
-            <CreateNew addNew={addNew} />
-          </Route>
-          <Route path="/about">
-            <About />
-          </Route>
-          {/* Add the new route for showing a single anecdote */}
-          <Route path="/anecdotes/:id">
-            <Anecdote anecdotes={anecdotes} />
-          </Route>
-        </Switch>
+            element={<AnecdoteList anecdotes={anecdotes} />}
+          />
+          <Route
+            path="/create"
+            element={
+              <CreateNew
+                addNew={addNew}
+                setNotification={setNotification}
+              />
+            }
+          />
+          <Route
+            path="/about"
+            element={<About />}
+          />
+          <Route
+            path="/anecdotes/:id"
+            element={<Anecdote anecdotes={anecdotes} />}
+          />
+        </Routes>
         <Footer />
       </div>
     </Router>
