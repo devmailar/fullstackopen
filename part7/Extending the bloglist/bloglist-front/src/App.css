@@ -1,0 +1,9 @@
+.success {
+  padding: 0.7rem;
+  background: #47b49d;
+}
+
+.error {
+  padding: 0.7rem;
+  background: #b44750;
+}
