@@ -1,27 +1,83 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
+import blogService from '../../services/blogs'
 
-const Blog = ({ blog, currentUser, likeBlog, deleteBlog }) => {
+const Blog = ({ blog, blogs, user, setBlogs, setNotificationContext }) => {
   const [view, setView] = useState(false)
   const [showRemoveButton, setShowRemoveButton] = useState(false)
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
+  const userAddedBlog = () => {
+    return user && user.id === blog.user.id
   }
 
-  const userAddedBlog = () => {
-    return currentUser && currentUser.id === blog.user.id
+  const handleLike = async ({ id, title, author, url, likes }) => {
+    try {
+      const updatedBlog = await blogService.update(id, {
+        title,
+        author,
+        url,
+        likes: likes + 1,
+      })
+
+      setBlogs(
+        blogs.map((blog) => {
+          return blog.id === updatedBlog.id ? updatedBlog : blog
+        })
+      )
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const handleDelete = async ({ id, title, author }) => {
+    if (window.confirm(`Remove blog ${title} by ${author}`)) {
+      try {
+        await blogService.remove(id)
+
+        setBlogs(blogs.filter((blog) => blog.id !== id))
+        setNotificationContext({
+          message: 'blog removed',
+          type: 'success',
+        })
+
+        setTimeout(() => {
+          setNotificationContext({
+            message: null,
+            type: null,
+          })
+        }, 5000)
+      } catch (err) {
+        console.error(err)
+
+        setNotificationContext({
+          message: 'failed to remove blog',
+          type: 'error',
+        })
+
+        setTimeout(() => {
+          setNotificationContext({
+            message: null,
+            type: null,
+          })
+        }, 5000)
+      }
+    }
   }
 
   useEffect(() => {
     setShowRemoveButton(userAddedBlog())
-  }, [currentUser])
+  }, [user])
 
   return (
-    <div className="container" style={blogStyle}>
+    <div
+      className="container"
+      style={{
+        paddingTop: 10,
+        paddingLeft: 2,
+        border: 'solid',
+        borderWidth: 1,
+        marginBottom: 5,
+      }}
+    >
       <div data-testid="title" className="blog-title">
         {blog.title}
       </div>
@@ -33,12 +89,13 @@ const Blog = ({ blog, currentUser, likeBlog, deleteBlog }) => {
         <>
           <div data-testid="url">{blog.url}</div>
           <div data-testid="likes">
-            likes {blog.likes} <button onClick={likeBlog}>like</button>
+            likes {blog.likes}
+            <button onClick={() => handleLike(blog)}>like</button>
           </div>
-          <div>{blog.author}</div>
+          <div data-testid="author">{blog.author}</div>
           {showRemoveButton && (
             <div>
-              <button onClick={deleteBlog}>remove</button>
+              <button onClick={() => handleDelete(blog)}>remove</button>
             </div>
           )}
         </>

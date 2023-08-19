@@ -1,29 +1,51 @@
 import { useState } from 'react'
+import blogService from '../../services/blogs'
 
-const BlogForm = ({ createBlog }) => {
+const BlogForm = ({ blogs, setBlogs, setNotificationContext }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
-  const handleTitleChange = (event) => {
-    setTitle(event.target.value)
-  }
+  const handleCreate = async ({ title, author, url }) => {
+    try {
+      const createdBlog = await blogService.create({
+        title,
+        author,
+        url,
+        likes: 0,
+      })
 
-  const handleAuthorChange = (event) => {
-    setAuthor(event.target.value)
-  }
+      setBlogs([...blogs, createdBlog])
+      setNotificationContext({
+        message: `a new blog ${title} by ${author}`,
+        type: 'success',
+      })
 
-  const handleUrlChange = (event) => {
-    setUrl(event.target.value)
+      setTimeout(() => {
+        setNotificationContext({
+          message: null,
+          type: null,
+        })
+      }, 5000)
+    } catch (error) {
+      setNotificationContext({
+        message: `failed to create new blog with title ${title}`,
+        type: 'error',
+      })
+
+      setTimeout(() => {
+        setNotificationContext({
+          message: null,
+          type: null,
+        })
+      }, 5000)
+    }
   }
 
   const addBlog = (event) => {
     event.preventDefault()
-    createBlog({
-      title: title,
-      author: author,
-      url: url,
-    })
+
+    handleCreate({ title: title, author: author, url: url })
     setTitle('')
     setAuthor('')
     setUrl('')
@@ -40,7 +62,7 @@ const BlogForm = ({ createBlog }) => {
             value={title}
             name="title"
             data-testid="title"
-            onChange={handleTitleChange}
+            onChange={(e) => setTitle(e.target.value)}
           />
         </div>
         <div>
@@ -50,7 +72,7 @@ const BlogForm = ({ createBlog }) => {
             value={author}
             name="author"
             data-testid="author"
-            onChange={handleAuthorChange}
+            onChange={(e) => setAuthor(e.target.value)}
           />
         </div>
         <div>
@@ -60,7 +82,7 @@ const BlogForm = ({ createBlog }) => {
             value={url}
             name="url"
             data-testid="url"
-            onChange={handleUrlChange}
+            onChange={(e) => setUrl(e.target.value)}
           />
         </div>
         <button type="submit">create</button>
