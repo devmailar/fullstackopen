@@ -13,6 +13,10 @@ const App = () => {
 
   const [notificationContext, setNotificationContext] = useState(null)
 
+  const sortBlogsByLikes = [...blogs].sort(
+    (blogA, blogB) => blogB.likes - blogA.likes
+  )
+
   useEffect(() => {
     const loggedUser = window.localStorage.getItem('loggedBlogsappUser')
 
@@ -40,10 +44,6 @@ const App = () => {
       />
     )
   }
-
-  const sortBlogsByLikes = [...blogs].sort(
-    (blogA, blogB) => blogB.likes - blogA.likes
-  )
 
   return (
     <>

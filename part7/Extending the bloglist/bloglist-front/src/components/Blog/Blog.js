@@ -5,10 +5,6 @@ const Blog = ({ blog, blogs, user, setBlogs, setNotificationContext }) => {
   const [view, setView] = useState(false)
   const [showRemoveButton, setShowRemoveButton] = useState(false)
 
-  const userAddedBlog = () => {
-    return user && user.id === blog.user.id
-  }
-
   const handleLike = async ({ id, title, author, url, likes }) => {
     try {
       const updatedBlog = await blogService.update(id, {
@@ -61,6 +57,10 @@ const Blog = ({ blog, blogs, user, setBlogs, setNotificationContext }) => {
         }, 5000)
       }
     }
+  }
+
+  const userAddedBlog = () => {
+    return user && user.id === blog.user.id
   }
 
   useEffect(() => {
