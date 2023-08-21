@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import blogService from '../../services/blogs'
 
-const BlogForm = ({ blogs, setBlogs, setNotificationContext }) => {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+const BlogForm = ({ setBlogs, setNotificationContext }) => {
+  const [form, setForm] = useState({
+    title: '',
+    author: '',
+    url: '',
+  })
 
   const handleCreate = async ({ title, author, url }) => {
     try {
@@ -15,7 +17,10 @@ const BlogForm = ({ blogs, setBlogs, setNotificationContext }) => {
         likes: 0,
       })
 
-      setBlogs([...blogs, createdBlog])
+      setBlogs((prev) => {
+        return [...prev, createdBlog]
+      })
+
       setNotificationContext({
         message: `a new blog ${title} by ${author}`,
         type: 'success',
@@ -42,47 +47,55 @@ const BlogForm = ({ blogs, setBlogs, setNotificationContext }) => {
     }
   }
 
-  const addBlog = (event) => {
-    event.preventDefault()
+  const handleChange = (e) => {
+    setForm((prev) => {
+      setForm({ ...prev, [e.target.name]: e.target.value })
+    })
+  }
 
-    handleCreate({ title: title, author: author, url: url })
-    setTitle('')
-    setAuthor('')
-    setUrl('')
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
+    handleCreate({ title: form.title, author: form.author, url: form.url })
+    setForm({
+      title: '',
+      author: '',
+      url: '',
+    })
   }
 
   return (
     <div>
       <h2>Create new blog</h2>
-      <form onSubmit={addBlog}>
+      <form onSubmit={handleSubmit}>
         <div>
           title:
           <input
             type="text"
-            value={title}
+            value={form ? form.title : ''}
             name="title"
             data-testid="title"
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={handleChange}
           />
         </div>
         <div>
           author:
           <input
             type="text"
-            value={author}
+            value={form ? form.author : ''}
             name="author"
             data-testid="author"
-            onChange={(e) => setAuthor(e.target.value)}
+            onChange={handleChange}
           />
         </div>
         <div>
           url:
           <input
             type="text"
-            value={url}
+            value={form ? form.url : ''}
             name="url"
             data-testid="url"
-            onChange={(e) => setUrl(e.target.value)}
+            onChange={handleChange}
           />
         </div>
         <button type="submit">create</button>
