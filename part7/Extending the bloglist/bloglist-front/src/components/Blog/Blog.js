@@ -4,14 +4,13 @@ import { SET_NOTIFICATION } from '../../reducers/notification'
 import blogService from '../../services/blogs'
 import { SET_BLOGS } from '../../reducers/blogs'
 
-const Blog = ({ blog, user }) => {
-  // console.log('user', user)
-
+const Blog = ({ blog }) => {
   const dispatch = useDispatch()
 
   const [view, setView] = useState(false)
   const [showRemoveButton, setShowRemoveButton] = useState(false)
 
+  const { user } = useSelector((state) => state.user)
   const { blogs } = useSelector((state) => state.blogs)
 
   const handleLike = async ({ id, title, author, url, likes }) => {

@@ -1,10 +1,8 @@
 import { useSelector } from 'react-redux'
 import Blog from '../Blog/Blog'
 
-const BlogList = ({ user }) => {
-  const { blogs } = useSelector((state) => {
-    return state.blogs
-  })
+const BlogList = () => {
+  const { blogs } = useSelector((state) => state.blogs)
 
   if (!blogs?.length) {
     return <p>loading...</p>
@@ -17,7 +15,7 @@ const BlogList = ({ user }) => {
   return (
     <ul>
       {filterBlogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} user={user} />
+        <Blog key={blog.id} blog={blog} />
       ))}
     </ul>
   )

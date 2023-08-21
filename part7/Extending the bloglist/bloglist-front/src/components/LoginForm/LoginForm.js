@@ -4,8 +4,9 @@ import { SET_NOTIFICATION } from '../../reducers/notification'
 import blogService from '../../services/blogs'
 import loginService from '../../services/login'
 import Notification from '../Notification/Notification'
+import { SET_USER } from '../../reducers/user'
 
-const LoginForm = ({ setUser }) => {
+const LoginForm = () => {
   const dispatch = useDispatch()
 
   const [username, setUsername] = useState('')
@@ -22,7 +23,7 @@ const LoginForm = ({ setUser }) => {
         password,
       })
 
-      setUser(user)
+      dispatch(SET_USER(user))
       setUsername('')
       setPassword('')
 

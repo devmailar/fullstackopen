@@ -5,8 +5,11 @@ const options = {
   initialState: { message: null, type: null },
   reducers: {
     SET_NOTIFICATION: (state, action) => {
-      state.message = action.payload.message
-      state.type = action.payload.type
+      return {
+        ...state,
+        message: action.payload.message,
+        type: action.payload.type,
+      }
     },
   },
 }
