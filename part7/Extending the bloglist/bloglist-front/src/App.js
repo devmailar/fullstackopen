@@ -1,22 +1,20 @@
 import { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import './App.css'
-import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
+import { SET_BLOGS } from './reducers/blogs'
+import BlogList from './components/BlogList/BlogList'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  const dispatch = useDispatch()
+
   const [user, setUser] = useState()
 
   const { message, type } = useSelector((state) => state.notification)
-
-  const sortBlogsByLikes = [...blogs].sort(
-    (blogA, blogB) => blogB.likes - blogA.likes
-  )
 
   useEffect(() => {
     const loggedUser = window.localStorage.getItem('loggedBlogsappUser')
@@ -31,7 +29,7 @@ const App = () => {
   useEffect(() => {
     if (user) {
       blogService.getAll().then((blogs) => {
-        setBlogs(blogs)
+        dispatch(SET_BLOGS(blogs))
       })
     }
   }, [user])
@@ -58,18 +56,10 @@ const App = () => {
       </p>
 
       <Togglable createButton="create new blog" cancelButton="cancel">
-        <BlogForm setBlogs={setBlogs} />
+        <BlogForm />
       </Togglable>
 
-      {sortBlogsByLikes.map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          blogs={blogs}
-          user={user}
-          setBlogs={setBlogs}
-        />
-      ))}
+      <BlogList user={user} />
     </>
   )
 }

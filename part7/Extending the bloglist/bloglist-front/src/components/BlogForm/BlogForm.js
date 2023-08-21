@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import blogService from '../../services/blogs'
 import { SET_NOTIFICATION } from '../../reducers/notification'
+import { SET_BLOGS } from '../../reducers/blogs'
 
-const BlogForm = ({ setBlogs }) => {
+const BlogForm = () => {
   const dispatch = useDispatch()
 
   const [form, setForm] = useState({
@@ -21,9 +22,11 @@ const BlogForm = ({ setBlogs }) => {
         likes: 0,
       })
 
-      setBlogs((prev) => {
-        return [...prev, createdBlog]
-      })
+      dispatch(
+        SET_BLOGS((prev) => {
+          return [...prev, createdBlog]
+        })
+      )
 
       dispatch(
         SET_NOTIFICATION({
