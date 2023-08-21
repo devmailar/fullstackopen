@@ -1,15 +1,17 @@
 import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { SET_NOTIFICATION } from '../../reducers/notification'
 import blogService from '../../services/blogs'
 import loginService from '../../services/login'
-import Notification from '../Notification'
+import Notification from '../Notification/Notification'
 
-const LoginForm = ({
-  notificationContext,
-  setNotificationContext,
-  setUser,
-}) => {
+const LoginForm = ({ setUser }) => {
+  const dispatch = useDispatch()
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+
+  const { message, type } = useSelector((state) => state.notification)
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -29,16 +31,15 @@ const LoginForm = ({
     } catch (err) {
       console.error(err)
 
-      setNotificationContext({
-        message: 'Wrong username or password',
-        type: 'error',
-      })
+      dispatch(
+        SET_NOTIFICATION({
+          message: 'Wrong username or password',
+          type: 'error',
+        })
+      )
 
       setTimeout(() => {
-        setNotificationContext({
-          message: null,
-          type: null,
-        })
+        dispatch(SET_NOTIFICATION({ message: null, type: null }))
       }, 5000)
     }
   }
@@ -46,10 +47,8 @@ const LoginForm = ({
   return (
     <form onSubmit={handleLogin}>
       <h2>log in to application</h2>
-      <Notification
-        message={notificationContext?.message}
-        type={notificationContext?.type}
-      />
+
+      <Notification message={message} type={type} />
 
       <div>
         username

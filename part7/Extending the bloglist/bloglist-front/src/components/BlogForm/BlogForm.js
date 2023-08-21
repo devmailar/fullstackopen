@@ -1,7 +1,11 @@
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import blogService from '../../services/blogs'
+import { SET_NOTIFICATION } from '../../reducers/notification'
 
-const BlogForm = ({ setBlogs, setNotificationContext }) => {
+const BlogForm = ({ setBlogs }) => {
+  const dispatch = useDispatch()
+
   const [form, setForm] = useState({
     title: '',
     author: '',
@@ -21,28 +25,26 @@ const BlogForm = ({ setBlogs, setNotificationContext }) => {
         return [...prev, createdBlog]
       })
 
-      setNotificationContext({
-        message: `a new blog ${title} by ${author}`,
-        type: 'success',
-      })
+      dispatch(
+        SET_NOTIFICATION({
+          message: `a new blog ${title} by ${author}`,
+          type: 'success',
+        })
+      )
 
       setTimeout(() => {
-        setNotificationContext({
-          message: null,
-          type: null,
-        })
+        dispatch(SET_NOTIFICATION({ message: null, type: null }))
       }, 5000)
     } catch (error) {
-      setNotificationContext({
-        message: `failed to create new blog with title ${title}`,
-        type: 'error',
-      })
+      dispatch(
+        SET_NOTIFICATION({
+          message: `failed to create new blog with title ${title}`,
+          type: 'error',
+        })
+      )
 
       setTimeout(() => {
-        setNotificationContext({
-          message: null,
-          type: null,
-        })
+        dispatch(SET_NOTIFICATION({ message: null, type: null }))
       }, 5000)
     }
   }

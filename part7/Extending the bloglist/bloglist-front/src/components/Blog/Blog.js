@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { SET_NOTIFICATION } from '../../reducers/notification'
 import blogService from '../../services/blogs'
 
-const Blog = ({ blog, blogs, user, setBlogs, setNotificationContext }) => {
+const Blog = ({ blog, blogs, user, setBlogs }) => {
+  const dispatch = useDispatch()
+
   const [view, setView] = useState(false)
   const [showRemoveButton, setShowRemoveButton] = useState(false)
 
@@ -30,30 +34,28 @@ const Blog = ({ blog, blogs, user, setBlogs, setNotificationContext }) => {
         await blogService.remove(id)
 
         setBlogs(blogs.filter((blog) => blog.id !== id))
-        setNotificationContext({
-          message: 'blog removed',
-          type: 'success',
-        })
+        dispatch(
+          SET_NOTIFICATION({
+            message: 'blog removed',
+            type: 'success',
+          })
+        )
 
         setTimeout(() => {
-          setNotificationContext({
-            message: null,
-            type: null,
-          })
+          dispatch(SET_NOTIFICATION({ message: null, type: null }))
         }, 5000)
       } catch (err) {
         console.error(err)
 
-        setNotificationContext({
-          message: 'failed to remove blog',
-          type: 'error',
-        })
+        dispatch(
+          SET_NOTIFICATION({
+            message: 'failed to remove blog',
+            type: 'error',
+          })
+        )
 
         setTimeout(() => {
-          setNotificationContext({
-            message: null,
-            type: null,
-          })
+          dispatch(SET_NOTIFICATION({ message: null, type: null }))
         }, 5000)
       }
     }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import './App.css'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
@@ -11,7 +12,7 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState()
 
-  const [notificationContext, setNotificationContext] = useState(null)
+  const { message, type } = useSelector((state) => state.notification)
 
   const sortBlogsByLikes = [...blogs].sort(
     (blogA, blogB) => blogB.likes - blogA.likes
@@ -36,22 +37,14 @@ const App = () => {
   }, [user])
 
   if (!user) {
-    return (
-      <LoginForm
-        notificationContext={notificationContext}
-        setNotificationContext={setNotificationContext}
-        setUser={setUser}
-      />
-    )
+    return <LoginForm setUser={setUser} />
   }
 
   return (
     <>
       <h2>Blogs</h2>
-      <Notification
-        message={notificationContext?.message}
-        type={notificationContext?.type}
-      />
+      <Notification message={message} type={type} />
+
       <p>
         {user.name} logged in
         <button
@@ -65,11 +58,7 @@ const App = () => {
       </p>
 
       <Togglable createButton="create new blog" cancelButton="cancel">
-        <BlogForm
-          blogs={blogs}
-          setBlogs={setBlogs}
-          setNotificationContext={setNotificationContext}
-        />
+        <BlogForm setBlogs={setBlogs} />
       </Togglable>
 
       {sortBlogsByLikes.map((blog) => (
@@ -79,7 +68,6 @@ const App = () => {
           blogs={blogs}
           user={user}
           setBlogs={setBlogs}
-          setNotificationContext={setNotificationContext}
         />
       ))}
     </>
