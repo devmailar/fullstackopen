@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux'
 import Blog from '../Blog/Blog'
 
-const BlogList = () => {
+export default function BlogList() {
   const { blogs } = useSelector((state) => state.blogs)
 
   if (!blogs?.length) {
@@ -20,5 +20,3 @@ const BlogList = () => {
     </ul>
   )
 }
-
-export default BlogList

@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import Notification from '../../components/Notification'
 import { SET_NOTIFICATION } from '../../reducers/notification'
+import { SET_USER } from '../../reducers/user'
 import blogService from '../../services/blogs'
 import loginService from '../../services/login'
-import Notification from '../Notification/Notification'
-import { SET_USER } from '../../reducers/user'
 
-const LoginForm = () => {
+export default function LoginView() {
   const dispatch = useDispatch()
 
   const [username, setUsername] = useState('')
@@ -73,5 +73,3 @@ const LoginForm = () => {
     </form>
   )
 }
-
-export default LoginForm
