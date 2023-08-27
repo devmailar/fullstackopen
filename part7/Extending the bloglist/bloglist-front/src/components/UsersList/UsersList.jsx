@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux'
-import User from '../User/User'
+import { Link } from 'react-router-dom'
 
 export default function UsersList() {
   const { users } = useSelector((state) => state.users)
@@ -13,7 +13,18 @@ export default function UsersList() {
       <h2>Users</h2>
       <ul>
         {users.map((user) => (
-          <User key={user.id} user={user} />
+          <li
+            key={user.id}
+            style={{
+              display: 'flex',
+              gap: '1rem',
+              alignItems: 'center',
+              width: 'max-content',
+            }}
+          >
+            <Link to={`/users/${user.id}`}>{user.username}</Link>
+            <span>{user.blogs.length} blogs</span>
+          </li>
         ))}
       </ul>
     </>

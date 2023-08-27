@@ -13,10 +13,10 @@ export default function BlogList() {
   })
 
   return (
-    <ul>
+    <div>
       {filterBlogs.map((blog) => (
         <Blog key={blog.id} blog={blog} />
       ))}
-    </ul>
+    </div>
   )
 }

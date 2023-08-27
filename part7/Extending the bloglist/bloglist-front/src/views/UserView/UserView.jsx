@@ -5,18 +5,18 @@ import BlogForm from '../../components/BlogForm'
 import BlogList from '../../components/BlogList'
 import Notification from '../../components/Notification'
 import Togglable from '../../components/Togglable'
-import UsersList from '../../components/UsersList'
+import UserProfile from '../../components/UserProfile'
 import { SET_BLOGS } from '../../reducers/blogs'
 import { SET_USER } from '../../reducers/user'
 import { SET_USERS } from '../../reducers/users'
 import blogService from '../../services/blogs'
 import usersService from '../../services/users'
+import UsersList from '../../components/UsersList/UsersList'
 
 export default function UserView() {
   const dispatch = useDispatch()
 
   const { message, type } = useSelector((state) => state.notification)
-
   const { user } = useSelector((state) => state.user)
 
   useEffect(
@@ -24,7 +24,7 @@ export default function UserView() {
       usersService.getAll().then((users) => dispatch(SET_USERS(users)))
       blogService.getAll().then((blogs) => dispatch(SET_BLOGS(blogs)))
     },
-    [user]
+    [user, dispatch]
   )
 
   return (
@@ -57,7 +57,23 @@ export default function UserView() {
           }
         />
 
-        <Route path="users" element={<UsersList />} />
+        <Route
+          path="users"
+          element={
+            <>
+              <UsersList />
+            </>
+          }
+        />
+
+        <Route
+          path="users/:id"
+          element={
+            <>
+              <UserProfile />
+            </>
+          }
+        />
       </Routes>
     </div>
   )
