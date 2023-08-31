@@ -7,3 +7,10 @@
   padding: 0.7rem;
   background: #b44750;
 }
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 0.8em;
+  background: rgba(101, 166, 188, 0.276);
+}

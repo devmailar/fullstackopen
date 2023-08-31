@@ -30,19 +30,22 @@ export default function UserView() {
 
   return (
     <div>
+      <nav>
+        <a href="/">blogs</a>
+        <a href="/users">users</a>
+        <p>{user.name} logged in</p>
+        <button
+          onClick={function () {
+            window.localStorage.removeItem('loggedBlogsappUser')
+            dispatch(SET_USER(null))
+          }}
+        >
+          logout
+        </button>
+      </nav>
       <Notification message={message} type={type} />
 
       <h2>Blogs</h2>
-      <p>{user.name} logged in</p>
-
-      <button
-        onClick={function () {
-          window.localStorage.removeItem('loggedBlogsappUser')
-          dispatch(SET_USER(null))
-        }}
-      >
-        logout
-      </button>
 
       <Routes>
         <Route
