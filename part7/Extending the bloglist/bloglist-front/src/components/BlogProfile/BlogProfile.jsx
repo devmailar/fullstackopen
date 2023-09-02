@@ -61,6 +61,36 @@ export default function BlogProfile() {
     }
   }
 
+  const handleComment = async function (event) {
+    event.preventDefault()
+
+    try {
+      const comment = event.target[0].value
+      const updatedBlog = await blogService.update(id, {
+        title: blog.title,
+        author: blog.author,
+        url: blog.url,
+        likes: blog.likes,
+        comments: [
+          ...blog.comments,
+          {
+            text: comment,
+          },
+        ],
+      })
+
+      dispatch(
+        SET_BLOGS(
+          blogs.map((blog) => {
+            return blog.id === id ? updatedBlog : blog
+          })
+        )
+      )
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return (
     <div>
       <h2>{blog.title}</h2>
@@ -69,6 +99,10 @@ export default function BlogProfile() {
       <button onClick={() => handleLike(blog)}>like</button>
       <p>added by {blog.author}</p>
       <h3>comments</h3>
+      <form onSubmit={handleComment}>
+        <input type="text" />
+        <button type="submit">add comment</button>
+      </form>
       <ul>
         {blog.comments.map((comment) => (
           <li

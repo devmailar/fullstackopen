@@ -81,7 +81,9 @@ blogsRouter.post("/:id/comment", async (request, response) => {
     });
 
     response.json(updatedBlog);
-  } catch (error) {}
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 blogsRouter.put("/:id", async (request, response) => {
