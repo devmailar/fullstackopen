@@ -29,20 +29,54 @@ export default function UserView() {
   )
 
   return (
-    <div>
+    <>
       <nav>
-        <a href="/">blogs</a>
-        <a href="/users">users</a>
-        <p>{user.name} logged in</p>
-        <button
-          onClick={function () {
-            window.localStorage.removeItem('loggedBlogsappUser')
-            dispatch(SET_USER(null))
+        <div
+          style={{
+            display: 'flex',
+            gap: '0.6em',
           }}
         >
-          logout
-        </button>
+          <a href="/">Blogs</a>
+          <a href="/users">Users</a>
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            gap: '0.6em',
+          }}
+        >
+          <p>{user.name} logged in</p>
+          <button
+            onClick={() => {
+              window.localStorage.removeItem('loggedBlogsappUser')
+              dispatch(SET_USER(null))
+            }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="1000mm"
+              height="1000mm"
+              style={{
+                maxWidth: '1.6em',
+                height: 'auto',
+              }}
+              viewBox="0 0 1000 1000"
+            >
+              <path
+                d="M250 200h125c15 0 25 10 25 25v50c0 15-10 25-25 25H250c-35 0-50 15-50 50v300c0 35 15 50 50 50h125c15 0 25 10 25 25v50c0 15-10 25-25 25H250c-100 0-150-50-150-150l-1-302c0-100 51-148 151-148m400 46c12 0 29 8 50 29l175 175c35 35 35 66 0 100L700 725c-50 50-75 25-75 0V600H475c-31 0-50-12-50-50V450c0-35 17-49 50-50h150V275c0-14 8-29 25-29m-338 754h188-188"
+                style={{
+                  opacity: 1,
+                  vectorEffect: 'none',
+                  fill: '#000',
+                  fillOpacity: 1,
+                }}
+              />
+            </svg>
+          </button>
+        </div>
       </nav>
+
       <Notification message={message} type={type} />
 
       <h2>Blogs</h2>
@@ -88,6 +122,6 @@ export default function UserView() {
           }
         />
       </Routes>
-    </div>
+    </>
   )
 }
