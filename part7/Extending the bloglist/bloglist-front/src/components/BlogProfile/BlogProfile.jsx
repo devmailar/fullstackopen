@@ -68,6 +68,22 @@ export default function BlogProfile() {
       <p>{blog.likes} likes</p>
       <button onClick={() => handleLike(blog)}>like</button>
       <p>added by {blog.author}</p>
+      <h3>comments</h3>
+      <ul>
+        {blog.comments.map((comment) => (
+          <li
+            style={{
+              marginTop: '0.5rem',
+              backgroundColor: 'lightblue',
+              padding: '0.5rem',
+              width: 'fit-content',
+            }}
+            key={comment}
+          >
+            {comment.text}
+          </li>
+        ))}
+      </ul>
       {user.id === blog.user.id && (
         <button onClick={() => handleDelete(blog)}>remove</button>
       )}

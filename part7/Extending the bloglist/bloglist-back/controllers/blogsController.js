@@ -13,28 +13,27 @@ blogsRouter.get("/", async (request, response) => {
 });
 
 blogsRouter.post("/", async (request, response) => {
-  const { title, author, url, likes } = request.body;
-  const { token } = request;
-
   try {
-    const decodedToken = jwt.verify(token, process.env.SECRET);
+    const body = request.body;
+    const decodedToken = jwt.verify(request.token, process.env.SECRET);
 
-    if (!token || !decodedToken.id) {
+    if (!request.token || !decodedToken.id) {
       return response.status(401).json({ error: "missing or invalid token" });
     }
 
-    if (!title || !author || !url) {
-      return response
-        .status(401)
-        .json({ error: "missing title or author or url" });
+    if (!body.title || !body.author || !body.url) {
+      return response.status(401).json({
+        error: "missing title or author or url",
+      });
     }
 
     const user = await User.findById(decodedToken.id);
     const blog = new Blog({
-      title,
-      author,
-      url,
-      likes,
+      title: body.title,
+      author: body.author,
+      url: body.url,
+      likes: body.likes,
+      comments: body.comments,
       user: user._id,
     });
 
@@ -53,6 +52,38 @@ blogsRouter.post("/", async (request, response) => {
   }
 });
 
+blogsRouter.post("/:id/comment", async (request, response) => {
+  try {
+    const body = request.body;
+
+    const comment = {
+      text: body.text,
+    };
+
+    if (!comment.text) {
+      return response.status(400).json({
+        error: "missing text from body",
+      });
+    }
+
+    const blog = await Blog.findById(request.params.id);
+
+    if (!blog) {
+      return response.status(404).json({
+        error: "blog not found",
+      });
+    }
+
+    blog.comments = blog.comments.concat(comment);
+
+    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {
+      new: true,
+    });
+
+    response.json(updatedBlog);
+  } catch (error) {}
+});
+
 blogsRouter.put("/:id", async (request, response) => {
   const body = request.body;
 
@@ -61,6 +92,7 @@ blogsRouter.put("/:id", async (request, response) => {
     author: body.author,
     url: body.url,
     likes: body.likes,
+    comments: body.comments,
   };
 
   const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {

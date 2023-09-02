@@ -20,6 +20,7 @@ const BlogForm = () => {
         author,
         url,
         likes: 0,
+        comments: [],
       })
 
       dispatch(
